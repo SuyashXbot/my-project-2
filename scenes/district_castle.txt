@@ -1,0 +1,126 @@
+*label start_castle
+*set castle_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (188 words, 10 named places/buildings)
+*comment ============================================================
+Between the curtain wall and the Ditch of [b]King's Baulk[/b] lies the [b]Royal Castle[/b], a city of dressed grey ashlar and trampled mire within the island ring. In the [b]Outer Ward[/b], iron-shod hooves clatter along [b]Mews Causeway[/b], where grooms sleep in the haylofts above the [b]Royal Mews[/b] while Master Corwin Dray keeps his panelled officer's lodging over the tack-house and a second stone townhouse in the Gilded Row. Smoke from [b]Armorer's Forge[/b] drifts past the [b]Household Knights' Barracks[/b] and the buttressed vaults of the [b]Royal Granaries[/b], mingling the sharp tang of quenched steel with toasted barley and sour horse-piss. Across the drawbridge of [b]Saint George's Barbican[/b] rises the [b]Inner Ward[/b], where [b]Westminster-style King's Hall[/b], the [b]Queen's Cloister[/b], and the [b]Steward's Counting-House[/b] shelter three hundred household servants who sleep on straw pallets along the wainscot passages. When the curfew bell tolls from [b]The White Donjon[/b], the night watch chains the postern gates, while old lime-washed crosses on the low cellar doors of [b]Bakehouse Yard[/b] still mark where the Great Pestilence emptied the sculleries twelve summers ago.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${castle_prosperity} | Fear ${castle_fear} | Controlled by: [i]${castle_control}[/i] (Visit #${castle_visits})
+------------------------------------------------------------
+*if castle_fear >= 50
+  Armed sergeants in brigandines stand double-watch at Saint George's Barbican, questioning every groom and page who crosses Mews Causeway.
+*elseif castle_prosperity >= 75
+  Wains heaped with sacked wheat from the shires creak steadily into the Royal Granaries, and fat tallow candles burn in the Steward's Counting-House.
+
+*comment ============================================================
+*comment EVENT 1: THE ROYAL GRANARIES & HOUSEHOLD KNIGHTS' BARRACKS
+*comment ============================================================
+Outside the [b]Royal Granaries[/b], a dispute erupts between the clerks of [b]Lord Steward Symon Vane[/b]—who sleeps in his Inner Ward chamber on court nights and his Gilded Row mansion on feast days—and the men-at-arms from the [b]Household Knights' Barracks[/b]. A moldering bin of plague-year rye has been condemned, yet the under-steward orders the grooms to mix the spoiled grain into the household pottage and the pages' bread-troughs to save three silver marks.
+
+*if bastard_stance = "defiant"
+  One of the barracks squires recognizes you as Sir Edmund Harrowmere's proud by-blow and sneers, "Let the Mews bastard taste the black rye first!"
+*else
+  The pages look to you nervously, knowing Master Corwin trusts your judgment with the grain-bins.
+
+*choice
+  #Expose the ergot-spotted rye before the Captain of the Barracks so the servants and pages are not poisoned.
+    *set empathy +4
+    *set duty +3
+    *set castle_prosperity -2
+    *set castle_fear -4
+    *gosub_scene startup recalc_stats
+    You scoop a fistful of the purple-spurred grain from the sack and hold it under the Captain's nose at [b]Armorer's Forge[/b]. "Feed Saint Anthony's fire to the barracks and half the guard will be convulsing before Sunday." The Captain forces the clerk to burn the spoiled sacks in the ditch, and the castle servants bless your name.
+    *goto castle_event_2
+  #Help the under-steward quietly sell the spoiled grain to Bridgefoot pig-keepers and pocket a two-penny cut.
+    *set ambition +4
+    *set cruelty +2
+    *set empathy -2
+    *set coins +2
+    *set castle_prosperity +4
+    *gosub_scene startup recalc_stats
+    You load the condemned sacks onto a night-cart bound for the outer ditches and take two silver pennies from the Steward's clerk at the [b]Steward's Counting-House[/b], keeping your mouth shut as the cart rolls out.
+    *goto castle_event_2
+  #Threaten the barracks squire who mocked my bloodline until he hauls the grain-sacks to the lime-pit himself.
+    *set cruelty +3
+    *set ambition +2
+    *set castle_fear +4
+    *gosub_scene startup recalc_stats
+    You step across [b]Mews Causeway[/b] and pin the squire against the buttress of the [b]Royal Granaries[/b] until he shoulders the heavy sack himself, teaching the barracks that Sir Edmund's son takes no lip.
+    *goto castle_event_2
+
+*comment ============================================================
+*comment EVENT 2: RIVALRY & INTRIGUE AT SAINT GEORGE'S BARBICAN
+*comment ============================================================
+*label castle_event_2
+Near [b]Saint George's Barbican[/b], where the heralds post the court proclamations outside [b]King's Hall[/b], you spot your Mews rival [b]Piers[/b] whispering with a liveried footman of Lord Roderic Harrowmere.
+*if piers_state = "allied"
+  Seeing you approach, Piers breaks off and hurries to your side by [b]Bakehouse Yard[/b]. "Roderic's man offered me three groats to tell him which nights you carry messages for Master Corwin," Piers admits, keeping our truce. "I sent him down the wrong lane toward the Ditch."
+  *set plot_evidence +1
+  *goto castle_event_3
+*else
+  Piers points a grease-stained finger at you across the cobbles of the [b]Outer Ward[/b], and Roderic's footman steps into your path outside the [b]Queen's Cloister[/b] wicket, demanding you hand over your father's old signet-ring or face a charge of wearing usurped heraldry within the castle precinct.
+
+*choice
+  #Stand my ground on the stones of King's Hall and invoke Master Corwin Dray's household protection.
+    *set duty +3
+    *set corwin_rel +4
+    *set castle_fear -2
+    *gosub_scene startup recalc_stats
+    You show the royal Mews badge on your sleeve before the barbican warders. Within the Outer Ward, a royal groom answers only to the Master of the Stables and the Lord Steward; Roderic's footman is forced to retreat before the halberds.
+    *goto castle_event_3
+  #Draw the footman into the dark archway behind The White Donjon and take his purse and his master's writ by force.
+    *set cruelty +4
+    *set ambition +3
+    *set coins +3
+    *set plot_evidence +1
+    *set castle_fear +5
+    *gosub_scene startup recalc_stats
+    Behind the damp buttresses of [b]The White Donjon[/b], you slam the footman's head against the ashlar blocks, relieving him of three silver pennies and a sealed note listing the witnesses Lord Roderic plans to bribe.
+    *goto castle_event_3
+  #Yield a brass counterfeit ring to trick Roderic's man while keeping my father's true keepsake hidden in the hayloft.
+    *set ambition +3
+    *set empathy +1
+    *gosub_scene startup recalc_stats
+    With feigned humility, you hand over a two-farthing brass ring bought from a peddler, sending Roderic's agent away triumphant with worthless metal while you study his face for the future.
+    *goto castle_event_3
+
+*comment ============================================================
+*comment EVENT 3: THE STEWARD'S COUNTING-HOUSE OR PLAGUE CELLARS
+*comment ============================================================
+*label castle_event_3
+As dusk gathers and the scullions light tallow dips along [b]Bakehouse Yard[/b], an old turnspit who has lived inside the [b]Inner Ward[/b] kitchens since before the Great Pestilence beckons you toward a boarded cellar beneath the [b]Steward's Counting-House[/b].
+
+"Your father Sir Edmund lodged in the turret above this cellar the spring he sought his marriage release," the old servant whispers, glancing toward the red plague-crosses still faded on the lintel. "When the pestilence took the old under-chamberlain, they bricked up his baggage-chests down there. The watch is changing now."
+
+*choice
+  #Pry open the plague-sealed cellar door and search the dusty chests for a trace of my father's stay at court.
+    *set ambition +3
+    *set duty +2
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    Holding your breath against the stale, lime-choked air of the pestilence cellar, you lift the lid of a worm-eaten cedar chest and find a tally-stick notched with Sir Edmund Harrowmere's name for six marks paid to the Chancery hanaper—proof he paid the royal fee for his wedding license!
+    *goto castle_end
+  #Pay the old turnspit a silver penny and say a prayer for the plague-dead before sealing the door respectfully.
+    *set empathy +4
+    *set duty +2
+    *if coins >= 1
+      *set coins -1
+    *set castle_prosperity +3
+    *gosub_scene startup recalc_stats
+    You press a penny into the old servant's knotted hand and trace the sign of the Lightbearer over the faded red cross on the lintel. Grateful for your reverence, the servant tells you the name of the clerk who witnessed your father's payment.
+    *goto castle_end
+  #Report the unsealed cellar to Lord Steward Symon Vane's bailiff for a reward of three silver pennies.
+    *set ambition +3
+    *set cruelty +2
+    *set empathy -2
+    *set coins +3
+    *set castle_control "Lord Steward Symon Vane"
+    *gosub_scene startup recalc_stats
+    The Steward's bailiff tosses you three pennies for reporting the breach and sets masons to wall up the passage, tightening the Steward's grip on the Inner Ward.
+    *goto castle_end
+
+*label castle_end
+The curfew bell of [b]The White Donjon[/b] tolls across the [b]Outer Ward[/b], calling you back to your hayloft in the [b]Royal Mews[/b].
+*return

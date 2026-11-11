@@ -1,0 +1,128 @@
+*label start_craftsmens_ward
+*set craftsmens_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (195 words, 10 named streets/buildings)
+*comment ============================================================
+South of the market cobbles stretches [b]The Craftsmen's Ward[/b], a dense honeycomb of three-story timber-framed jettied tenements whose upper solar overhangs nearly kiss above the mud of the lanes, leaving only a ribbon of grey sky. Here the respectable middling sort—freemen, master-bakers, cordwainers, and tallow-chandlers—keep shop on the ground floor beside hinged drop-shutters and sleep with their wives and apprentices under the eaves. Along [b]Bakehouse Lane[/b], woodsmoke and the sweet yeast-warmth of rising manchets pour from [b]Tobin Hale's Bakery[/b], where your mother Maren tends the brick ovens next to [b]Alisoun Verrier's Herb-Garret[/b] and the stone basin of [b]Saint Martin's Conduit[/b]. One turning east down [b]Chandlers' Lane[/b] and [b]Cordwainers' Row[/b], the air thickens with rendering mutton-fat, boiling beeswax, and oak-bark tan-liquor outside the [b]Cordwainers' Fraternity Hall[/b] and the tavern sign of [b]The Pewter Tankard[/b]. Every evening when the curfew bell rings from the squat tower of [b]Saint Martin-in-the-Dough[/b], apprentices rake ash over their hearths against fire, walking carefully past the sunken green turf of [b]Pardon Churchyard[/b], where two thousand artisans were laid in trenches during the Great Pestilence.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${craftsmens_prosperity} | Fear ${craftsmens_fear} | Controlled by: [i]${craftsmens_control}[/i] (Visit #${craftsmens_visits})
+------------------------------------------------------------
+
+*comment ============================================================
+*comment EVENT 1: ALISOUN VERRIER AT HER HERB-GARRET IN BAKEHOUSE LANE
+*comment ============================================================
+Beside the warm brick party-wall of [b]Tobin Hale's Bakery[/b] on [b]Bakehouse Lane[/b], bundles of dried feverfew, rosemary, and Saint-John's-wort hang beneath the jettied eaves of [b]Alisoun Verrier's Herb-Garret[/b]. Inside, [b]Alisoun Verrier[/b] is warming beeswax and marsh-mallow root in a brass pipkin while your mother [b]Maren[/b] rests her flour-dusted arms at the half-door.
+*set alisoun_met true
+*if alisoun_status = "unmet"
+  *set alisoun_status "acquainted"
+
+*if alisoun_status = "estranged"
+  Alisoun keeps her eyes on her mortar and pestle when you step across the threshold, her voice quiet with hurt. "Your mother has been waiting for word of you, ${name}. I have dressed her wrist-burns, though she asks for little."
+*else
+  Alisoun looks up with a bright, warm smile that crinkles the corners of her hazel eyes, wiping her hands on her bleached apron. "Look, Mistress Maren—I told you the robin on the conduit spout meant ${name} would walk down [b]Bakehouse Lane[/b] today!"
+
+*choice
+  *selectable_if ((honor >= 48) or (empathy >= 48)) #Draw water for Alisoun at Saint Martin's Conduit and sit with her and my mother to share a loaf and mend the herb-shelves.
+    *set alisoun_rel +10
+    *if alisoun_status = "acquainted"
+      *set alisoun_status "courting"
+    *set empathy +4
+    *set duty +2
+    *set maren_rel +6
+    *gosub_scene startup recalc_stats
+    You carry two brimming oak pails from [b]Saint Martin's Conduit[/b] and plane the warped pine shelf in Alisoun's garret while your mother watches happily from the bakehouse bench. When Maren steps back inside to turn the loaves, Alisoun touches the calloused scar on your wrist with cool, lavender-scented fingers.
+    "Half the young men in [b]Cordwainers' Row[/b] dream of foreign plunder or courtly pride," she whispers softly. "Give me a man who honors his mother and keeps his word, ${name}."
+    *goto craftsmens_event_2
+  #Ask Alisoun whether any apothecaries in the ward ever sold henbane or sleeping-draughts to men wearing the Harrowmere or De Varenne badge.
+    *set ambition +3
+    *set duty +2
+    *set alisoun_rel +4
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    Alisoun furrows her brow and takes down her late father's ledger of simples. "Three weeks before your father Sir Edmund was ambushed, a squire from the Gilded Row bought four drams of hemlock-oil from the old pepperer in [b]Chandlers' Lane[/b]—to dip crossbow quarrels so even a grazing wound would stop a heart."
+    *goto craftsmens_event_2
+  #Demand Alisoun give me a jar of poppy-syrup without payment so I can sell it to the stable-grooms or tavern-keepers.
+    *set cruelty +3
+    *set ambition +3
+    *set empathy -4
+    *set alisoun_rel -14
+    *set coins +3
+    *gosub_scene startup recalc_stats
+    Hurt and dismayed by your harsh tone, Alisoun surrenders a small glazed pot of poppy-syrup, which you sell at [b]The Pewter Tankard[/b] for three silver pennies while your mother looks away in sorrow.
+    *goto craftsmens_event_2
+
+*comment ============================================================
+*comment EVENT 2: TOBIN HALE'S BAKERY & THE CORDWAINERS' FRATERNITY HALL
+*comment ============================================================
+*label craftsmens_event_2
+At the corner of [b]Chandlers' Lane[/b] and [b]Cordwainers' Row[/b], a dispute has broken out outside the [b]Cordwainers' Fraternity Hall[/b]. The ward beadle—pressured by creditors from the Gilded Row—is threatening to raise the quarterly stall-rent on every widow and small artisan who survived the pestilence near [b]Pardon Churchyard[/b], while Uncle [b]Tobin Hale[/b], Aunt [b]Agnes[/b], and cousin [b]Wenna[/b] stand among the worried householders.
+
+*choice
+  #Speak before the Cordwainers' Fraternity Hall as Sir Edmund's son, citing the ancient ward custom that exempts plague-widows and honest bakers from arbitrary tallage.
+    *set duty +4
+    *set empathy +3
+    *set tobin_rel +6
+    *set agnes_rel +6
+    *set craftsmens_prosperity +4
+    *set craftsmens_fear -4
+    *gosub_scene startup recalc_stats
+    Your clear voice and knowledge of castle custom rally the masters of [b]Cordwainers' Row[/b]. Even Aunt Agnes nods in grim approval as the beadle backs down before the united fraternity.
+    *goto craftsmens_event_3
+  #Offer to collect the beadle's tallage along Chandlers' Lane myself—skimming three silver pennies while sparing Uncle Tobin's house.
+    *set ambition +4
+    *set cruelty +2
+    *set empathy -2
+    *set coins +3
+    *set craftsmens_fear +4
+    *gosub_scene startup recalc_stats
+    You walk [b]Chandlers' Lane[/b] with the beadle's staff, collecting the silver from the tallow-dippers and keeping three pennies for your purse while crossing Uncle Tobin's bakery off the roll.
+    *goto craftsmens_event_3
+  #Spend the afternoon drinking spiced ale with the journeymen at The Pewter Tankard and listening to ward gossip.
+    *if coins >= 1
+      *set coins -1
+    *set empathy +2
+    *set ambition +1
+    *gosub_scene startup recalc_stats
+    Over a jack of nut-brown ale at [b]The Pewter Tankard[/b], the journeymen tell you how respected your mother Maren has become along [b]Bakehouse Lane[/b], and warn you which bailiffs take Lord Roderic's silver.
+    *goto craftsmens_event_3
+
+*comment ============================================================
+*comment EVENT 3: CURFEW BELLS AT SAINT MARTIN-IN-THE-DOUGH
+*comment ============================================================
+*label craftsmens_event_3
+As the curfew bell begins to toll from [b]Saint Martin-in-the-Dough[/b] and the night watch gathers its horn-lanterns beside [b]Pardon Churchyard[/b], a runaway baker's prentice—barely thirteen, with raw welts across his shoulders from a drunken master in [b]Chandlers' Lane[/b]—hides shivering behind the ash-barrels of [b]Tobin Hale's Bakery[/b]. His master stomps down the lane with an oak peel, shouting for you to drag the boy out for a thrashing.
+
+*choice
+  #Shield the boy and persuade Uncle Tobin and Alisoun to transfer his indenture lawfully before the wardens of Saint Martin-in-the-Dough.
+    *set empathy +5
+    *set duty +3
+    *set cruelty -2
+    *set alisoun_rel +5
+    *set craftsmens_prosperity +2
+    *gosub_scene startup recalc_stats
+    You block the drunken master's oak peel with your forearm and call the churchwarden of [b]Saint Martin-in-the-Dough[/b] to witness the unlawful wounds on the boy's back. Alisoun dresses his welts while Uncle Tobin takes him on as an honest faggot-carrier.
+    *goto craftsmens_end
+  #Seize the runaway prentice by the collar as his master demands—unless my heart stays my hand.
+    *if (empathy >= 52) or (cruelty <= 48)
+      *comment Hidden stats drive hesitation or refusal when ordered to harm innocents
+      You reach behind the ash-barrel and your fingers close on the boy's ragged collar—then you see the terror in his eyes and the blood soaking through his unbleached shirt. You cannot hand an innocent child back to the rod. Instead you point the drunken master down [b]Cordwainers' Row[/b] on a false trail and slip the boy a penny to reach his mother's village.
+      *if coins >= 1
+        *set coins -1
+      *set empathy +4
+      *set cruelty -2
+      *gosub_scene startup recalc_stats
+      *goto craftsmens_end
+    *else
+      You haul the trembling boy from behind the barrels and hand him over for a two-penny finder's fee, turning away as the oak peel falls.
+      *set cruelty +4
+      *set empathy -4
+      *set coins +2
+      *set craftsmens_fear +3
+      *gosub_scene startup recalc_stats
+      *goto craftsmens_end
+
+*label craftsmens_end
+With the hearths raked under ash and the night watch calling the hour along [b]Bakehouse Lane[/b], you bid farewell to your mother and leave [b]The Craftsmen's Ward[/b].
+*return

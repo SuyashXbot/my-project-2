@@ -1,0 +1,7 @@
+*stat_chart
+  percent honor Honor
+  percent infamy Infamy
+  percent ysolde_rel Lady Ysolde de Varenne
+  percent clarimond_rel Clarimond of Saint Jude's
+  percent cateline_rel Cateline "Cat" Rook
+  percent alisoun_rel Alisoun Verrier

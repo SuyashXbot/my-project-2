@@ -1,0 +1,125 @@
+*label start_bridgefoot
+*set bridgefoot_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (204 words, 10 named streets/buildings)
+*comment ============================================================
+South of Cathedral Isle, the nineteen stone arches of [b]The Great Bridge[/b] span the roaring tide of the [b]Aurthel[/b], its roadway choked by four-story timber-framed jettied houses and haberdashers' booths that groan above the water-wheels. Where the western bridge-head touches the marshy bank sprawls [b]Bridgefoot and the Stews[/b], the mud-drowned sanctuary of the city's poorest laborers, washerwomen, bear-wards, and outlaws. Along [b]Cock Lane[/b] and [b]Maidenhead Alley[/b], whitewashed bath-houses and low tippling-cellars under the sign of [b]The Boar's Tusk Tavern[/b] and [b]The Cardinal's Hat[/b] lean over ditches clogged with tanners' lime, dead dogs, and butchered sheep-heads. Beside the iron-spiked gatehouse of [b]Bridgefoot Gaol[/b], debtors and branded felons beg through rusted bars at passersby drawing brackish water from [b]Leper's Well[/b], across from the sagging porch of [b]Saint Mary-Over-the-Water[/b]. Above the southern draw-pier stands the noseless, filth-smeared stone effigy of the reviled [b]King Vortimer II[/b], while at the lane's end the black turf of [b]Deadman's Ditch[/b] marks the great plague-pit where ten thousand nameless poor were tumbled without shrouds when the Great Pestilence swept the river-shacks.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${bridgefoot_prosperity} | Fear ${bridgefoot_fear} | Controlled by: [i]${bridgefoot_control}[/i] (Visit #${bridgefoot_visits})
+------------------------------------------------------------
+*if fallen_branch
+  Because you were cast out of the Royal Mews after three lapses of duty, these fetid lanes around [b]Cock Lane[/b] and [b]The Great Bridge[/b] are now your daily stamping-ground.
+
+*comment ============================================================
+*comment EVENT 1: THE DEFACED STATUE OF REVILED KING VORTIMER II (STATUE #4)
+*comment ============================================================
+At the southern drawbridge pier of [b]The Great Bridge[/b], you stand before the weathered limestone statue of [b]King Vortimer II ("Vortimer the Starver")[/b], the most reviled monarch in the kingdom's annals, who debased the silver coinage to copper dross, hanged the guild-petitioners from the bridge-chains, and locked the city gates against starving country folk during the winter dearth. His stone nose has been knocked off with cobbles, charcoal gallows-marks blacken his crown, and carters smear mud across his robes every market day.
+
+How do you act before the defaced statue of the reviled King Vortimer II?
+
+*choice
+  #Whisper a prayer even for the reviled king's soul and wipe the fresh mire from the Latin warning on the plinth.
+    *set statues_prayed +1
+    *set empathy +4
+    *set duty +3
+    *gosub_scene startup recalc_stats
+    To the astonishment of the watermen lounging by [b]Saint Mary-Over-the-Water[/b], you scrape the dried mud from the inscription that warns princes against tyranny and murmur a prayer for the dead. An old chantry priest nods solemnly at your mercy.
+    *goto bridgefoot_event_2
+  *selectable_if (coins >= 1) #Leave a penny on Vortimer's broken plinth for the starving prisoners begging through the bars of Bridgefoot Gaol nearby.
+    *set coins -1
+    *set statues_offered +1
+    *set empathy +5
+    *set bridgefoot_prosperity +3
+    *set bridgefoot_fear -3
+    *gosub_scene startup recalc_stats
+    You lay a silver penny upon the tyrant's chipped foot so the turnkey of [b]Bridgefoot Gaol[/b] will pass a loaf of brown bread and a pail of small beer through the grate to the debtors inside.
+    *goto bridgefoot_event_2
+  #Hurl an oyster-shell at King Vortimer's stone eyes and carve my own defiant mark deeper into his broken crown!
+    *set statues_defaced +1
+    *set king_vortimer_defaced true
+    *set cruelty +2
+    *set ambition +3
+    *gosub_scene startup recalc_stats
+    You score a deep gash across the stone tyrant's cheek with your dagger-point to a roar of applause from the watermen and tavern-girls of [b]Cock Lane[/b]. "So perish every lord who starves the commons!" a drover shouts, clapping your shoulder.
+    *goto bridgefoot_event_2
+
+*comment ============================================================
+*comment EVENT 2: CATELINE ROOK AT THE BOAR'S TUSK TAVERN
+*comment ============================================================
+*label bridgefoot_event_2
+Inside the low, smoke-blackened rafters of [b]The Boar's Tusk Tavern[/b] at the corner of [b]Maidenhead Alley[/b], red-haired [b]Cateline "Cat" Rook[/b] sits on an upturned herring-barrel playing hazard with loaded bone dice against two bridge-wardens while keeping watch on the water-stairs below [b]The Great Bridge[/b].
+*set cateline_met true
+*if cateline_status = "unmet"
+  *set cateline_status "acquainted"
+
+When Cateline spots you through the tallow-smoke, she sweeps her winnings into her apron and slides onto the bench beside you. "Well met in the mud, ${name}! A one-eyed crossbowman who used to ride for your uncle [b]Lord Roderic[/b] is drinking sack in the back booth of [b]The Cardinal's Hat[/b]—bragging about an ambush in the country where a knight named Harrowmere died."
+
+*choice
+  *selectable_if ((infamy >= 48) or (ambition >= 48)) #Team up with Cateline to corner the one-eyed crossbowman in Maidenhead Alley and take both his confession and his purse.
+    *set cateline_rel +10
+    *if cateline_status = "acquainted"
+      *set cateline_status "courting"
+    *set ambition +4
+    *set cruelty +2
+    *set plot_evidence +1
+    *set coins +4
+    *gosub_scene startup recalc_stats
+    Cateline lures the drunken mercenary out the back door of [b]The Cardinal's Hat[/b] with a flashed ankle and a laugh—straight into your waiting grip by [b]Leper's Well[/b]. With your blade at his gorget and Cateline's dirk at his ribs, the one-eyed bowman swears on his life that Lord Roderic's bailiff paid him ten marks to shoot Sir Edmund from the hazel-hedge! Cateline splits his four silver pennies with you and presses her warm cheek against yours in the dark.
+    *goto bridgefoot_event_3
+  #Pay Cateline two silver pennies to have her river-larks steal the mercenary's muster-roll while I summon the parish constable.
+    *if coins >= 2
+      *set coins -2
+    *set duty +3
+    *set ambition +2
+    *set cateline_rel +5
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    Cateline's nimble fingers lift the oilskin muster-ticket from the bowman's belt before the constable of [b]Saint Mary-Over-the-Water[/b] claps him in [b]Bridgefoot Gaol[/b], giving you written proof of his service under Roderic's banner.
+    *goto bridgefoot_event_3
+  #Try to cheat Cateline at her own dice-table in The Boar's Tusk Tavern.
+    *set ambition +2
+    *set cruelty +2
+    *set cateline_rel -12
+    *set cateline_status "rival"
+    *gosub_scene startup recalc_stats
+    Cateline spots your thumb tipping the bone die before it stops rolling; she pins your sleeve to the oak table with her eating-knife, warning you never to cross Cat Rook in her own stews.
+    *goto bridgefoot_event_3
+
+*comment ============================================================
+*comment EVENT 3: THE CUTTHROAT BAILIFFS AT DEADMAN'S DITCH
+*comment ============================================================
+*label bridgefoot_event_3
+By the sunken grass of [b]Deadman's Ditch[/b], where the plague-dead lie beneath the marsh-willows, the rack-renting landlord of [b]Cock Lane[/b] has hired two [b]Cutthroat Bailiffs[/b] to evict a crippled fuller and his seven-year-old granddaughter from their leaning timber shack, ordering you to help smash their loom and pitch their bedding into the mire for two pennies' hire.
+
+*choice
+  #Defend the crippled fuller's doorway on Cock Lane and pay or drive off the Cutthroat Bailiffs.
+    *set empathy +5
+    *set duty +3
+    *set cruelty -2
+    *set bridgefoot_fear -5
+    *set bridgefoot_prosperity +3
+    *gosub_scene startup recalc_stats
+    You plant your boots on the rotten threshold and turn the lead bailiff's iron crowbar aside with your blade until a crowd of watermen from [b]The Great Bridge[/b] gathers at your back, forcing the rent-gatherers to retreat across the ditch.
+    *goto bridgefoot_end
+  #Raise the iron crowbar to smash the poor fuller's loom as ordered—unless my own heart refuses the blow.
+    *if (empathy >= 52) or (cruelty <= 48)
+      *comment Hidden stats drive hesitation or refusal when ordered to harm innocents
+      You heft the heavy iron bar above the wooden loom while the little girl clings to her grandfather's crutch in the rain. Suddenly you see your own mother Maren standing in the mud outside Harrowmere gates while Roderic's men threw your cradle-blankets into the ditch. Your arms lock; you hurl the crowbar into [b]Deadman's Ditch[/b] instead and tell the bailiffs to do their own butcher's work.
+      *set empathy +4
+      *set cruelty -3
+      *gosub_scene startup recalc_stats
+      *goto bridgefoot_end
+    *else
+      You splinter the wooden loom-frame with two heavy blows, toss the straw pallet into [b]Cock Lane[/b], and take your two silver pennies from the bailiff without looking back.
+      *set cruelty +5
+      *set empathy -4
+      *set coins +2
+      *set bridgefoot_fear +5
+      *gosub_scene startup recalc_stats
+      *goto bridgefoot_end
+
+*label bridgefoot_end
+As the river-fog swallows the house-lined arches of [b]The Great Bridge[/b] and the curfew bell tolls across the dark [b]Aurthel[/b], you leave [b]Bridgefoot and the Stews[/b].
+*return

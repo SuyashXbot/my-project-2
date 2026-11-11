@@ -1,0 +1,128 @@
+*label start_gilded_row
+*set gilded_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (196 words, 10 named streets/buildings)
+*comment ============================================================
+West of the Castle barbican runs [b]The Gilded Row[/b], where the earls and great officers of the crown dwell behind carved limestone portals and overhanging timber-framed galleries painted in vermilion and gold leaf. Here cleaner rain-washed cobbles replace the deep mire of the lower wards, though the central kennel along [b]Velvet Lane[/b] still carries rosewater slops, hawk-mews castings, and kitchen grease down toward [b]Silver Conduit[/b]. Forty liveried servants sleep inside the great hall and garrets of [b]Varenne House[/b], while across [b]Palfrey Court[/b] stand the gabled townhouses kept by [b]Master Corwin Dray[/b], [b]Lord Steward Symon Vane[/b], and [b]High Archivian Anselm[/b] when their castle shifts end. Perfumers and goldsmiths display enamelled reliquaries beneath the jettied eaves of [b]Goldsmiths' Arcade[/b], across from the lancet windows of [b]Saint Caelan-in-the-Gilt[/b] and the quiet garden walls of [b]Falconers' Close[/b]. At the crossing of [b]Heralds' Walk[/b] rises the pinnacled stone spire of [b]Queen Eleanor's & King Caelan's Memorial Cross[/b], where link-boys wait with pitch torches for the curfew bell and iron-studded shutters still bear the carved [i]memento mori[/i] lilies left after the Great Pestilence carried off three earls in a single fortnight.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${gilded_prosperity} | Fear ${gilded_fear} | Controlled by: [i]${gilded_control}[/i] (Visit #${gilded_visits})
+------------------------------------------------------------
+
+*comment ============================================================
+*comment EVENT 1: THE MEMORIAL CROSS OF KING CAELAN THE JUST (STATUE #1)
+*comment ============================================================
+At the head of [b]Heralds' Walk[/b], you pause before the [b]Memorial Cross of King Caelan the Just[/b], one of the five great royal monuments of the capital. Carved in freestone beneath a cusped canopy, the third king of the dynasty holds the stone rod of equity above the kneeling figures of widows and orphans. Great lords and humble petitions alike pause at its steps.
+
+How do you treat the statue of King Caelan the Just?
+
+*choice
+  #Kneel on the limestone steps and pray for justice in my father Sir Edmund's cause.
+    *set statues_prayed +1
+    *set duty +3
+    *set empathy +2
+    *gosub_scene startup recalc_stats
+    You bow your head beneath the carved canopy of [b]King Caelan's Memorial Cross[/b], whispering a prayer that the law which robbed your mother Maren may yet be set right. An elderly canon of [b]Saint Caelan-in-the-Gilt[/b] notices your reverence and nods approvingly across the walk.
+    *goto gilded_event_2
+  *selectable_if (coins >= 1) #Leave a silver penny and a sprig of rosemary as a votive offering at the King's stone feet.
+    *set coins -1
+    *set statues_offered +1
+    *set empathy +4
+    *set duty +2
+    *set gilded_prosperity +2
+    *gosub_scene startup recalc_stats
+    You lay a bright silver penny in the alms-dish carved into the pedestal of [b]King Caelan the Just[/b]. Word of the courteous Mews groom who honors the ancient kings reaches the porters of [b]Palfrey Court[/b].
+    *goto gilded_event_2
+  #Scratch a mocking gallows-mark into the plinth with my knife-point—what has royal "justice" ever done for a bastard?
+    *set statues_defaced +1
+    *set cruelty +4
+    *set ambition +2
+    *set duty -3
+    *set gilded_fear +4
+    *gosub_scene startup recalc_stats
+    While the link-boys look away toward [b]Silver Conduit[/b], you gouge a jagged gallows-tree across the Latin inscription of King Caelan's equity. Let the highborn see what their stone promises are worth.
+    *goto gilded_event_2
+
+*comment ============================================================
+*comment EVENT 2: LADY YSOLDE DE VARENNE AT VARENNE HOUSE
+*comment ============================================================
+*label gilded_event_2
+Outside the arched porte-cochère of [b]Varenne House[/b] on [b]Velvet Lane[/b], household servants in swan-badged surcoats are unloading tapestries while [b]Lady Bellisant de Varenne[/b]—your father's erstwhile betrothed—entertains your uncle [b]Lord Roderic's[/b] proctor inside the great solar.
+
+By the postern of [b]Falconers' Close[/b], Bellisant's niece [b]Lady Ysolde de Varenne[/b] steps out with a hooded merlin on her gauntleted wrist.
+*set ysolde_met true
+*if ysolde_status = "unmet"
+  *set ysolde_status "acquainted"
+
+*if ysolde_status = "rival"
+  Lady Ysolde's dark eyes narrow when she sees you by the garden wall. "Come to beg scraps at my aunt's gate, ${name}?" she asks coldly, though she does not summon the porters.
+*else
+  Lady Ysolde glances back toward the mullioned windows of [b]Varenne House[/b] and beckons you into the shadow of the jettied gallery along [b]Falconers' Close[/b]. "My aunt Bellisant and your uncle Roderic's clerk have been arguing over her dowry quitclaim all morning, ${name}. If the hall porters see me speaking with Sir Edmund's son, they will lock me in the solar until Michaelmas."
+
+*choice
+  *selectable_if ((honor >= 48) or (ambition >= 50)) #Speak with courtly boldness—adjust the jesses of her hawk and ask what price Lady Bellisant took to perjure my father's memory.
+    *set ysolde_rel +10
+    *if ysolde_status = "acquainted"
+      *set ysolde_status "courting"
+    *set ambition +3
+    *set duty +2
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    Your steady fingers calm her restless merlin as your hand brushes her kidskin glove. Ysolde's breath catches softly. "You have your father's voice—my aunt still turns pale when someone speaks his name," she whispers. "Bellisant never loved him; her father sold the release for twenty nobles, and Roderic paid her three hundred marks to deny it. Meet me here when the curfew bell rings, ${name}, and I will steal the draft from her cabinet."
+    *goto gilded_event_3
+  #Offer humble service as a groom of Master Corwin's household, keeping a respectful distance across Palfrey Court.
+    *set duty +3
+    *set empathy +2
+    *set ysolde_rel +5
+    *gosub_scene startup recalc_stats
+    You bow with measured grace, claiming only that you came to check the stables of [b]Master Corwin Dray's[/b] townhouse across [b]Palfrey Court[/b]. Ysolde admires your discretion and drops a scented handkerchief by your boot before re-entering the postern.
+    *goto gilded_event_3
+  #Mock House de Varenne's bought honor to her face and demand hush-money not to shout Bellisant's perjury in Velvet Lane.
+    *set cruelty +4
+    *set ambition +3
+    *set empathy -3
+    *set ysolde_rel -15
+    *set ysolde_status "rival"
+    *set coins +4
+    *gosub_scene startup recalc_stats
+    Flushing crimson with rage and pride, Lady Ysolde flings four silver pennies into the cobbles at your feet. "Pick up your silver from the gutter like the dog they named you, ${name}—and beware the next time you walk Velvet Lane after dark!"
+    *goto gilded_event_3
+
+*comment ============================================================
+*comment EVENT 3: GOLDSMITHS' ARCADE & THE GREAT OFFICERS' TOWNHOUSES
+*comment ============================================================
+*label gilded_event_3
+Further down [b]Goldsmiths' Arcade[/b], a young apprentice of a debtor goldsmith is being dragged from his master's stall toward [b]Silver Conduit[/b] by two of Lord Roderic's hired bailiffs, who claim the boy bruised their horse's fetlock on market morning. One of the bailiffs hands a leaded leather cosh to the onlookers and shouts for a castle groom to thrash the lad as an example.
+
+*choice
+  #Step between the bailiffs and the boy—use my Mews authority to forbid the beating.
+    *set empathy +4
+    *set duty +3
+    *set gilded_fear -4
+    *set gilded_prosperity +2
+    *gosub_scene startup recalc_stats
+    You catch the leaded cosh in mid-air outside [b]Master Corwin Dray's[/b] townhouse gate. "The horse isn't even lame in the pastern," you tell the crowd along [b]Goldsmiths' Arcade[/b], exposing the bailiffs' lie. Shamed before the clerks coming out of [b]High Archivian Anselm's[/b] door, the bullies release the boy, whose master slips two silver pennies into your hand in gratitude.
+    *set coins +2
+    *goto gilded_end
+  #Join the bailiffs in roughing up the debtor's stall—until my own conscience or ambition decides the blow.
+    *if (empathy >= 52) or (cruelty <= 48)
+      *comment Hidden stats drive hesitation or refusal when ordered to harm innocents
+      You take a step toward the trembling twelve-year-old apprentice, whose flour-pale face reminds you of your cousin Wenna in Bakehouse Lane. Your fingers loosen on the leather cosh; your stomach turns at the thought of breaking an innocent boy's ribs for a lord's vanity. You purposefully strike the timber stall-post instead, letting the boy scramble safely through the casement into [b]Falconers' Close[/b].
+      *set empathy +3
+      *set cruelty -2
+      *gosub_scene startup recalc_stats
+      *goto gilded_end
+    *else
+      You overturn the apprentice's bench into the kennel of [b]Velvet Lane[/b] and pocket a silver brooch that rolls into the mire while the bailiffs drag the boy to the stocks.
+      *set cruelty +4
+      *set ambition +3
+      *set empathy -3
+      *set coins +4
+      *set gilded_fear +5
+      *gosub_scene startup recalc_stats
+      *goto gilded_end
+
+*label gilded_end
+As the link-boys light their pitch-torches by [b]Silver Conduit[/b] and the curfew bell rings from [b]Saint Caelan-in-the-Gilt[/b], you take your leave of [b]The Gilded Row[/b].
+*return

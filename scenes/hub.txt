@@ -1,0 +1,537 @@
+*label hub_start
+*set did_mews_duty false
+*set did_family_duty false
+*set did_festival false
+*set did_main_plot false
+*set visited_district_this_year "none"
+
+============================================================
+ANNO DOMINI — YEAR ${year} OF YOUR SERVICE IN THE CAPITAL
+============================================================
+
+The bells of Cathedral Isle and the fifty parish churches mark the turning of Year ${year}. You are ${age} years old, known across the cobbles as "${title}" (${city_reputation}), with ${coins} silver pennies in your leather pouch.
+*if fallen_branch
+  Since your dismissal from the Royal Mews after three grave lapses of duty, you sleep in a damp timber loft above the drovers' pens in Bridgefoot, hauling river-freight and fighting in the mud for every groat.
+*else
+  You quarter in the hayloft of the Royal Mews inside the Outer Ward, earning ${wages} silver pennies a year under Master Corwin Dray.
+
+Every year in the capital turns upon four inescapable obligations—your [b]Duty Shifts at the Mews[/b], your [b]Family Obligation at Tobin Hale's Bakery[/b], the [b]Lightbearer Festival and Joust[/b], and the [b]Main Plot Summons[/b] concerning your father's name and Lord Roderic's grasp—alongside [b]one free journey to any district of the city[/b].
+
+*comment ============================================================
+*comment 1. MANDATORY BEAT: MEWS DUTY SHIFTS & RIVALRY
+*comment ============================================================
+*label mews_duty_beat
+*if fallen_branch
+  Even cast out to Bridgefoot, the royal drovers demand your tally-shift at the mud-wharves below the Great Bridge, where Piers still rides down with castle pack-mules to gloat over your fall.
+  *goto mews_duty_choice
+
+The horn-whistle sounds in the Royal Mews before dawn. A month of heavy stable shifts lies ahead: currying the warhorses, watching the oat-bins against Piers and his cronies Wat and Hodge, and riding escort for the castle marshals.
+
+Yet word reaches the hayloft that a band of river-smugglers along the Cut is paying eight silver pennies for an unasked pair of hands during work hours.
+*comment Explicit warning before neglect choice
+[b]WARNING:[/b] Master Corwin Dray checks the tally-board himself. Neglecting your Mews duty shift will count as a formal [b]Lapse of Duty[/b] (Lapses so far: ${lapses}), and leaving your post unattended will give your rival Piers an opening to frame you for theft or sabotage.
+
+*label mews_duty_choice
+*choice
+  #Stand my full duty shift in the Mews and watch Piers closely around the feed-chests.
+    *set did_mews_duty true
+    *set duty +4
+    *set coins +wages
+    *set corwin_rel +4
+    *gosub_scene startup recalc_stats
+    You report before prime every morning, leather apron laced tight, and earn your ${wages} silver pennies honestly.
+    *goto mews_rivalry_event
+  #Stand my shift, and when Ordered by the Under-Marshal to lame a poor carter's mare that blocked the gate, decide how to act.
+    *set did_mews_duty true
+    *set duty +2
+    *set coins +wages
+    *gosub_scene startup recalc_stats
+    Midway through the month, a wheelwright's half-starved mare snaps an axle outside the Royal Granaries, delaying the Lord Steward's train. The Under-Marshal tosses you an iron prick-spur and barks, "Drive that point into the nag's fetlock so the carter learns to keep his beast off the king's stones!"
+    *if (empathy >= 52) or (cruelty <= 48)
+      Your hand freezes on the iron spur. You look at the trembling mare's sunken ribs and the weeping carter on his knees in the mud, and something deep in your marrow—the memory of your mother driven onto the road—refuses the cruelty.
+      "I am a groom of the king's horses, sir, not a knacker of poor men's beasts," you say, dropping the iron into the mire and putting your shoulder to the broken cart-wheel yourself to clear the way. The Under-Marshal curses your soft heart, but Master Corwin watches from the gatehouse with quiet respect.
+      *set empathy +4
+      *set cruelty -3
+      *set corwin_rel +5
+      *gosub_scene startup recalc_stats
+      *goto mews_rivalry_event
+    *else
+      Hardened by ambition and the city's spite, you step forward without a tremor, strike the mare's hock with the flat of the iron to drive her screaming into the ditch, and kick the broken wheel aside for the Steward's banner. The carter curses your name across the ward.
+      *set cruelty +4
+      *set empathy -3
+      *set ambition +2
+      *gosub_scene startup recalc_stats
+      *goto mews_rivalry_event
+  #WARNING — Neglect my Mews duty shift to run contraband along the Cut for eight silver pennies (Incurs 1 Duty Lapse and leaves you exposed to Piers's schemes).
+    *set did_mews_duty false
+    *set lapses +1
+    *set mews_lapses +1
+    *set coins +8
+    *set duty -5
+    *set ambition +3
+    *set corwin_rel -12
+    *set framed_by_piers true
+    *set bastard_rumor_level +12
+    *gosub_scene startup recalc_stats
+    You slip over the Outer Ward wall before prime and spend the week hauling untaxed Gascon casks through the river-fog for eight silver pennies.
+    While your stall-row stands unguarded, Piers and Wat pry open the Master's locked tack-chest, steal a silver-bitted curb bridle, and bury its velvethead-band under the straw of your hayloft pallet! Worse still, they whisper to every washerwoman and page in the yard that Sir Edmund Harrowmere's baseborn brat has bastard blood that turns naturally to thievery.
+    *gosub enforce_lapse_punishment
+    *goto family_duty_beat
+
+*label mews_rivalry_event
+During the late watch in the Mews, lantern-light glints near the mash-troughs. You catch Wat and Hodge pouring crushed henbane seeds into the warm bran meant for the king's favorite courser while Piers stands lookout by the tack-room door, holding a stolen silver boss to plant in your kit-bag.
+
+How do you handle Piers and his gang tonight?
+
+*choice
+  #Reach out in the dark—seize the henbane pouch, show Piers how easily all three of them would hang if the courser died, and offer a truce if they cease their war.
+    *set empathy +3
+    *set duty +2
+    *set piers_rel +18
+    *set piers_state "allied"
+    *set feed_tainted false
+    *gosub_scene startup recalc_stats
+    You catch Wat's wrist before a single seed hits the bran. "Touch the king's horse and the Constable hangs you in chains at Bridgefoot," you whisper, emptying the poison into the dung-pit instead of calling the watch. Piers stares at you in the lantern-glow, expecting the lash. Slowly, he lowers the silver boss and spits on his palm. "You could have had our ears nailed to the pillory, ${name}. We're square. Nobody touches your stalls again."
+    *goto family_duty_beat
+  #Fight them behind the hay-ricks with bare knuckles and an ash-staff until Piers yields the yard.
+    *set cruelty +2
+    *set duty +2
+    *set ambition +2
+    *if (honor >= 55) or (infamy >= 55)
+      *set piers_state "crushed"
+      *set piers_rel -10
+      *gosub_scene startup recalc_stats
+      Sir Edmund's footwork serves you well in the narrow lane between the hay-ricks. You parry Wat's cudgel with a pitchfork shaft, drive your boot into Hodge's knee, and split Piers's lip against the oak trough until he spits blood and crawls back. "The loft is yours, Harrowmere," he wheezes.
+      *goto family_duty_beat
+    *else
+      *set piers_state "hostile"
+      *set piers_rel -8
+      *gosub_scene startup recalc_stats
+      You trade bruised ribs and split knuckles in the straw until the night watch hammers on the gate, forcing Piers and his cronies to scatter into the dark with the poisoned mash spilled harmlessly across the stones.
+      *goto family_duty_beat
+  #Outsmart them—swap the mash-bucket with the trough of Piers's own prize mule and summon Master Corwin just as Piers pockets the silver boss.
+    *set ambition +4
+    *set duty +2
+    *set piers_state "outsmarted"
+    *set piers_rel -15
+    *set corwin_rel +6
+    *gosub_scene startup recalc_stats
+    You tug the alarm-cord to Master Corwin's loft at the exact instant Piers slips the stolen silver boss into his own belt-pouch. Caught red-handed by the Master of the Stables, Piers is fined a month's wages and demoted to the dung-carts.
+    *goto family_duty_beat
+  #Crush them ruthlessly—break Wat's fingers in the grain-chest lid and threaten to slit Piers's hamstring if he breathes the word "bastard" again.
+    *set cruelty +5
+    *set ambition +3
+    *set empathy -4
+    *set piers_state "crushed"
+    *set piers_rel -25
+    *gosub_scene startup recalc_stats
+    You slam the heavy oak lid of the oat-chest down on Wat's knuckles and press a farrier's paring-knife against Piers's cheek until a thin bead of scarlet runs down his jaw. Terrified, the gang shrinks away whenever your shadow falls across the aisle.
+    *goto family_duty_beat
+
+*comment ============================================================
+*comment 2. MANDATORY BEAT: FAMILY OBLIGATION AT THE BAKERY
+*comment ============================================================
+*label family_duty_beat
+On the third Sunday of the quarter, the church bells of Saint Martin-in-the-Dough call you across the city to Bakehouse Lane in the Craftsmen's Ward. Your mother Maren has been hauling hundredweight sacks of bolted meal since three hours before dawn, her wrists red and cracked, while Uncle Tobin Hale tallies his chandlery ledgers and Aunt Agnes watches the wood-pile like a hawk. Cousin Wenna waves eagerly from the shutter, and next door in her herb-garret, Alisoun Verrier is grinding comfrey root.
+
+Uncle Tobin expects you to give your Sunday rest-day and two silver pennies toward your mother's board and the firing of the great brick ovens.
+*comment Explicit warning before neglect choice
+[b]WARNING:[/b] Refusing or skipping your family obligation at the bakery will count as a [b]Lapse of Duty[/b] (Lapses so far: ${lapses}), wear down Uncle Tobin's patience (${tobin_patience} remaining), and risk your mother Maren's place at the ovens.
+
+*choice
+  #Spend the whole Sunday hauling flour-sacks and splitting beech-faggots for my mother, and contribute two silver pennies to Uncle Tobin's board.
+    *set did_family_duty true
+    *set duty +3
+    *set empathy +4
+    *if coins >= 2
+      *set coins -2
+    *set maren_rel +8
+    *set tobin_rel +6
+    *set agnes_rel +5
+    *set wenna_rel +5
+    *set alisoun_rel +4
+    *gosub_scene startup recalc_stats
+    You hoist the heavy meal-sacks onto your shoulders so your mother can sit by the warm flue and rest her blistered palms. Maren touches your cheek with flour-whitened fingers. "You have your father's broad shoulders, ${name}, and a better heart than the men who judged us."
+    Even Aunt Agnes softens enough to wrap a hot spiced manchet in linen for your return to the Mews, and Alisoun slips out from the neighboring door to dress your mother's burns with lavender grease.
+    *goto district_roam_beat
+  #Fulfill my labor at the bakery ovens, but press Uncle Tobin and my mother for everything they remember about Lady Bellisant's precontract and my father's marriage lines.
+    *set did_family_duty true
+    *set duty +2
+    *set ambition +3
+    *set plot_evidence +1
+    *set maren_rel +4
+    *set tobin_rel +3
+    *gosub_scene startup recalc_stats
+    While you stack split alder-logs behind the bakehouse, your mother lowers her voice beneath the crackle of the oven. "Before your father wed me at Harrowmere church, ${name}, he rode here to the capital and paid twenty gold nobles to the archdeacon's registrar for a letter of release signed by Lady Bellisant's own father. Lord Roderic stole our household chest the night Edmund died—but the duplicate roll must still lie in the Tower of the Archivians or the Scholiasts' consistory chests."
+    *goto district_roam_beat
+  #WARNING — Neglect my family obligation at the bakery to carouse and gamble at the cock-pits (Incurs 1 Duty Lapse, wears out Tobin's patience, and harms your mother Maren).
+    *set did_family_duty false
+    *set lapses +1
+    *set family_lapses +1
+    *set duty -4
+    *set empathy -4
+    *set cruelty +2
+    *set maren_rel -10
+    *set tobin_rel -15
+    *set agnes_rel -15
+    *set alisoun_rel -8
+    *set tobin_patience -1
+    *gosub_scene startup recalc_stats
+    You never cross the threshold of Bakehouse Lane. Waiting in vain until the curfew bell rings, your mother Maren is forced to haul the heavy meal-sacks up the cellar ladder alone; she wrenches her back on the wet stone steps, and Aunt Agnes deducts her tallow-allowance in fury.
+    *if (tobin_patience <= 1) or (family_lapses >= 2)
+      *set maren_job_lost true
+      Out of patience with your broken promises, Aunt Agnes turns your mother out of the main bakehouse kitchen, forcing Maren to scrub lye-kettles in the freezing scullery shed for crusts!
+    *gosub enforce_lapse_punishment
+    *goto district_roam_beat
+
+*comment ============================================================
+*comment 3. FREE ROAM: VISIT ONE DISTRICT PER YEAR (10 DISTRICTS)
+*comment ============================================================
+*label district_roam_beat
+With the seasonal quarter turning, you have leave to roam the capital and spend your free days in [b]one district[/b] of the city this year. While you walk one ward, the other nine districts will shift behind your back as guild-masters, bailiffs, and nobles contend for mastery.
+
+Where in the capital do you direct your steps in Year ${year}?
+
+*choice
+  #Inside the Walls: The Royal Castle, Outer Ward, and Royal Granaries (Prosperity: ${castle_prosperity}, Fear: ${castle_fear}).
+    *set visited_district_this_year "The Royal Castle and Granaries"
+    *gosub_scene district_castle
+    *goto festival_beat
+  #Inside the Walls: The Gilded Row, where the high nobility and Lady Ysolde de Varenne dwell (Prosperity: ${gilded_prosperity}, Fear: ${gilded_fear}).
+    *set visited_district_this_year "The Gilded Row"
+    *gosub_scene district_gilded_row
+    *goto festival_beat
+  #Inside the Walls: The Tower of the Archivians, where Clarimond guards the realm's charters and rolls (Prosperity: ${archivians_prosperity}, Fear: ${archivians_fear}).
+    *set visited_district_this_year "The Tower of the Archivians"
+    *gosub_scene district_archivians
+    *goto festival_beat
+  #Inside the Walls: The Market Square and Guildhall at the city's noisy heart (Prosperity: ${market_prosperity}, Fear: ${market_fear}).
+    *set visited_district_this_year "The Market Square and Guildhall"
+    *gosub_scene district_market
+    *goto festival_beat
+  #Inside the Walls: The Craftsmen's Ward, home to guildsmen, Alisoun Verrier, and Uncle Tobin's lane (Prosperity: ${craftsmens_prosperity}, Fear: ${craftsmens_fear}).
+    *set visited_district_this_year "The Craftsmen's Ward"
+    *gosub_scene district_craftsmens_ward
+    *goto festival_beat
+  #Inside the Walls & Confluence Tip: The Keep and Cathedral Isle across the bishop's bridge (Prosperity: ${keep_prosperity}, Fear: ${keep_fear}).
+    *set visited_district_this_year "The Keep and Cathedral Isle"
+    *gosub_scene district_keep_cathedral
+    *goto festival_beat
+  #Outside the Walls (West Bank): The University of the Scholiasts—colleges, hostels, and canon lawyers (Prosperity: ${university_prosperity}, Fear: ${university_fear}).
+    *set visited_district_this_year "The University of the Scholiasts"
+    *gosub_scene district_university
+    *goto festival_beat
+  #Outside the Walls (West Bank & South): Bridgefoot, the Stews, and the house-lined Great Bridge (Prosperity: ${bridgefoot_prosperity}, Fear: ${bridgefoot_fear}).
+    *set visited_district_this_year "Bridgefoot and the Stews"
+    *gosub_scene district_bridgefoot
+    *goto festival_beat
+  #Outside the Walls (East Bank): Merchant Row and the Docks along the Thel, where Cateline Rook walks (Prosperity: ${docks_prosperity}, Fear: ${docks_fear}).
+    *set visited_district_this_year "Merchant Row and the Docks"
+    *gosub_scene district_docks
+    *goto festival_beat
+  #North of the Cut: Northgate Bridge, the Royal Hunting Park, and the Abbey (Prosperity: ${northgate_prosperity}, Fear: ${northgate_fear}).
+    *set visited_district_this_year "Northgate, the Hunting Park, and the Abbey"
+    *gosub_scene district_northgate_abbey
+    *goto festival_beat
+
+*comment ============================================================
+*comment 4. MANDATORY BEAT: THE LIGHTBEARER FESTIVAL AND JOUST
+*comment ============================================================
+*label festival_beat
+Midsummer brings the great feast of the [b]Lightbearer Festival[/b]. Pitch-cressets and beeswax processions wind from Cathedral Isle to the tournament lists in the Outer Ward, where Prince Halric, Prince Cassian, and the barons of the realm—including your uncle Lord Roderic's sworn champion—couch their lances before fifty thousand cheering citizens.
+
+Every groom of the Royal Mews is commanded under pain of the lash to tend the pavilions, armour the coursers, and guard the princes' stalls.
+*comment Explicit warning before neglect choice
+[b]WARNING:[/b] Abandoning your post during the Lightbearer Festival will count as a [b]Lapse of Duty[/b] (Lapses so far: ${lapses}) and leave the lists open to your rivals.
+
+*choice
+  #Report to the tournament lists in livery to serve at the Lightbearer Festival and Joust.
+    *set did_festival true
+    *set duty +3
+    *gosub_scene startup recalc_stats
+    *gosub_scene festival
+    *goto main_plot_beat
+  #WARNING — Shirk my stable duties at the Lightbearer lists to pick pockets and drink hypocras in the bonfires outside the gates (Incurs 1 Duty Lapse).
+    *set did_festival false
+    *set lapses +1
+    *set mews_lapses +1
+    *set duty -5
+    *set ambition +2
+    *set coins +5
+    *set framed_by_piers true
+    *gosub_scene startup recalc_stats
+    You abandon your stall-line while the trumpets blow for the first tilt, drinking spiced wine by the bonfires and lifting five silver pennies from drunken franklins. Back at the lists, a cinch-buckle gives way on a royal palfrey and Piers eagerly tells Master Corwin that you deserted your post!
+    *gosub enforce_lapse_punishment
+    *goto main_plot_beat
+
+*comment ============================================================
+*comment 5. MANDATORY BEAT: THE YEAR'S MAIN PLOT BEAT (RODERIC & PRECONTRACT)
+*comment ============================================================
+*label main_plot_beat
+As autumn mist creeps up the Aurthel from the sea, the main business of your bloodline comes to a head for Year ${year}.
+
+*if year = 1
+  A liveried pursuivant bearing the black boar of [b]Lord Roderic Harrowmere[/b] rides through Northgate and lodges in the Gilded Row at the townhouse of [b]Lady Bellisant de Varenne[/b]—the very noblewoman whose youth-betrothal to your father was used to bastardize you.
+  Word reaches you that Roderic's proctor has petitioned the High Archivian and the Bishop's Consistory Court to burn the old archidiaconal rolls of your birth-year, erasing any proof of your father's dispensation forever, while two of Roderic's retainers have been seen asking after your mother's bakehouse in the Craftsmen's Ward.
+*elseif year = 2
+  Lord Roderic himself arrives in the capital for the Michaelmas law-term, bringing the aging Lady Bellisant de Varenne to swear before the royal justices that she never released Sir Edmund from his precontract—even though Bellisant's own household confessor knows the oath is perjured for five hundred marks of Harrowmere timber.
+*else
+  With ${plot_evidence} pieces of evidence gathered concerning your father's marriage and murder, the Royal Council and Consistory Court summon witnesses to the Great Hall to answer whether Sir Edmund Harrowmere was unlawfully slain and whether his son is bastard or rightful heir.
+
+[b]WARNING:[/b] Ignoring this summons to defend your mother and your father's name will count as a grave [b]Lapse of Duty[/b] (Lapses so far: ${lapses}) and allow Lord Roderic to tighten his stranglehold unchallenged (`roderic_power`: ${roderic_power}).
+
+*choice
+  #Answer the summons head-on: intercept Roderic's agents and search for the precontract truth.
+    *set did_main_plot true
+    *set duty +4
+    *set ambition +3
+    *set plot_evidence +1
+    *set roderic_power -10
+    *gosub_scene startup recalc_stats
+    You confront Roderic's retainers under the stone archway outside the Consistory gate. Using what you know of the capital's lanes—and the sword-guard your father drilled into your bones—you force Roderic's proctor to back down before the witnesses and secure a notarized copy of the parish banns that proved Lady Bellisant's proxy accepted your father's release composition.
+    *if clarimond_met
+      Clarimond of Saint Jude's slips a wax-sealed memorandum into your sleeve confirming the folio number in the Tower of the Archivians.
+      *set clarimond_rel +5
+    *if ysolde_met
+      From an upper gallery, Lady Ysolde de Varenne watches you defy her aunt Bellisant's proctor, her dark eyes glittering with secret admiration.
+      *set ysolde_rel +5
+    *gosub_scene startup recalc_stats
+    *goto romance_arc_check
+  #Strike from the shadows: bribe a river-thug or ambush Roderic's courier in the dark along the Cut to seize his saddlebags by force.
+    *set did_main_plot true
+    *set cruelty +4
+    *set ambition +4
+    *set empathy -2
+    *set plot_evidence +1
+    *set roderic_power -12
+    *set coins +6
+    *gosub_scene startup recalc_stats
+    When Roderic's courier crosses the timber approach below Northgate after curfew, you drop from the jetty-beam with a muffled cloak and an ash-cudgel. Inside his oilskin saddlebag you find six silver groats and a private letter in Lord Roderic's own hand warning Lady Bellisant never to speak of the three crossbowmen paid at Stourbridge Fair the week your father died!
+    *set bellisant_letter_seen true
+    *if cateline_met
+      Cateline Rook whistles softly from the canal steps, helping you sink the courier's cloak in the sluice-race.
+      *set cateline_rel +6
+    *gosub_scene startup recalc_stats
+    *goto romance_arc_check
+  #Stand guard at Bakehouse Lane with Alisoun and Uncle Tobin's apprentices to protect my mother from Roderic's intimidators.
+    *set did_main_plot true
+    *set empathy +4
+    *set duty +3
+    *set maren_rel +8
+    *set tobin_rel +6
+    *set alisoun_rel +6
+    *set roderic_power -6
+    *gosub_scene startup recalc_stats
+    When two of Roderic's badge-men swagger into Bakehouse Lane to terrify your mother into signing a quitclaim, they find you standing before the oven door with an iron peel in hand and a dozen flour-dusted apprentices behind you. Shamed before the parish watch, the bullies retreat empty-handed.
+    *goto romance_arc_check
+  #WARNING — Neglect the summons completely and hide in the taverns while Roderic's men move against us (Incurs 1 Duty Lapse and strengthens Lord Roderic).
+    *set did_main_plot false
+    *set lapses +1
+    *set duty -5
+    *set empathy -4
+    *set roderic_power +15
+    *set maren_rel -8
+    *gosub_scene startup recalc_stats
+    You drink small beer in a smoky blind-house while Roderic's proctor enters an uncontested default against your mother's petition and his ruffians smash the shutters of your mother's garret.
+    *gosub enforce_lapse_punishment
+    *goto romance_arc_check
+
+*comment ============================================================
+*comment ROMANCE CHECK (NON-EXCLUSIVE UNTIL COMMITMENT, CAN TURN TO RIVALRY)
+*comment ============================================================
+*label romance_arc_check
+As Martinmas approaches and frost silvers the timber jetties of the capital, your ties with the women of the city deepen—or fray.
+*if committed_li = "none"
+  You have not yet sworn an exclusive troth before a priest or witness, leaving your heart unpledged among those you have met.
+  *if (ysolde_rel < 35) and ysolde_met
+    *set ysolde_status "rival"
+    Affronted by your low standing and slights, [b]Lady Ysolde de Varenne[/b] has turned from an acquaintance into a dangerous court rival who mocks your name in the Gilded Row.
+  *if (clarimond_rel < 35) and clarimond_met
+    *set clarimond_status "rival"
+    Stung by your disregard for the law and the archives, [b]Clarimond of Saint Jude's[/b] now locks the consistory chests against your inquiries.
+  *if (cateline_rel < 35) and cateline_met
+    *set cateline_status "rival"
+    Crossed in the dark lanes, [b]Cateline "Cat" Rook[/b] now tips off rival cutpurses whenever you walk near the Docks.
+  *if (alisoun_rel < 35) and alisoun_met
+    *set alisoun_status "estranged"
+    Grieved by your hardness of heart, [b]Alisoun Verrier[/b] turns her head away when you pass her herb-stall in the Craftsmen's Ward.
+
+Would you pledge yourself exclusively to one companion this autumn, or keep your courtships open?
+
+*choice
+  *selectable_if ((ysolde_met and (ysolde_rel >= 60)) and ((honor >= 55) or (ambition >= 60))) #Pledge my secret troth to Lady Ysolde de Varenne in the garden behind the Gilded Row.
+    *set committed_li "ysolde"
+    *set ysolde_status "committed"
+    *set ysolde_rel +10
+    *if clarimond_rel >= 60
+      *set clarimond_status "rival"
+      *set clarimond_rel -15
+    *if alisoun_rel >= 60
+      *set alisoun_status "estranged"
+      *set alisoun_rel -15
+    *gosub_scene startup recalc_stats
+    Beneath the frost-bitten medlar trees of the de Varenne garden, Lady Ysolde slips a silver swan ring onto your calloused finger. "Let my aunt Bellisant and your uncle Roderic choke on their parchments," she whispers against your lips. "Wait until you win back your spurs, ${name}, and I will name you mine before the whole court."
+    *goto year_summary_beat
+  *selectable_if ((clarimond_met and (clarimond_rel >= 60)) and ((duty >= 55) or (honor >= 55))) #Pledge my troth to Clarimond of Saint Jude's by the lantern-niche of the Tower of the Archivians.
+    *set committed_li "clarimond"
+    *set clarimond_status "committed"
+    *set clarimond_rel +10
+    *if ysolde_rel >= 60
+      *set ysolde_status "rival"
+      *set ysolde_rel -15
+    *gosub_scene startup recalc_stats
+    Clarimond takes off her spectacles, her eyes shining in the tallow-light as she writes both your names in the margin of a psalter leaf—a true [i]sponsalia de praesenti[/i] that no summoner can undo. "They used ink and Latin to rob your mother," she whispers, kissing your cheek. "Together we will use both to restore you."
+    *goto year_summary_beat
+  *selectable_if ((cateline_met and (cateline_rel >= 60)) and ((infamy >= 55) or (ambition >= 55))) #Swear blood-and-river troth to Cateline "Cat" Rook over a broken silver groat on the Docks.
+    *set committed_li "cateline"
+    *set cateline_status "committed"
+    *set cateline_rel +10
+    *if alisoun_rel >= 60
+      *set alisoun_status "estranged"
+      *set alisoun_rel -15
+    *gosub_scene startup recalc_stats
+    On the tarred pilings above the rushing Thel, Cateline bites a silver groat in two at the cross-mark and presses half into your palm before pulling you into a fierce kiss that tastes of cloves and salt spray. "Lords break charters, ${name}. River-folk keep halves till the tide runs dry."
+    *goto year_summary_beat
+  *selectable_if ((alisoun_met and (alisoun_rel >= 60)) and ((honor >= 55) or (empathy >= 55))) #Pledge my troth to Alisoun Verrier before my mother Maren in Bakehouse Lane.
+    *set committed_li "alisoun"
+    *set alisoun_status "committed"
+    *set alisoun_rel +10
+    *set maren_rel +8
+    *gosub_scene startup recalc_stats
+    In the warm glow of the bakehouse hearth, Alisoun places her herb-stained hands in yours while your mother Maren weeps for joy and blesses the match. "Whether you wear knight's gilt or groom's frieze, ${name}," Alisoun says softly, "my hearth and my heart are yours."
+    *goto year_summary_beat
+  #Keep my heart unpledged for now; I will not bind myself to a single oath yet.
+    You keep your counsel as the winter winds sweep down from the Royal Hunting Park across the Cut.
+    *goto year_summary_beat
+
+*comment ============================================================
+*comment SUBROUTINE: ENFORCE LAPSE PUNISHMENTS (1, 2, 3)
+*comment ============================================================
+*label enforce_lapse_punishment
+*if lapses = 1
+  ------------------------------------------------------------
+  [b]FIRST LAPSE OF DUTY — FORMAL WARNING AND WAGE CUT[/b]
+  ------------------------------------------------------------
+  Master Corwin Dray summons you before the tack-room ledger with a face like carved flint. "One neglect of duty I punish in the purse, ${name}," he growls, drawing a black line through your tally. "Your yearly wage is docked from ${wages} pennies to 6 pennies, and Piers has already whispered to the bailiffs that you cannot be trusted."
+  *set wages 6
+  *return
+*elseif lapses = 2
+  ------------------------------------------------------------
+  [b]SECOND LAPSE OF DUTY — PUBLIC FLOGGING AND ESTRANGEMENT[/b]
+  ------------------------------------------------------------
+  The castle provost binds your wrists to the iron ring of the Outer Ward whipping-post before the assembled grooms, laundry-maids, and household knights. Six strokes of the knotted leather scourge bite through your shirt while Piers and Wat grin from the hay-doors.
+  When word of your public flogging reaches the city, Uncle Tobin bars you from his parlor table, your mother weeps in shame over her kneading-trough, and those you courted draw back from your disgrace.
+  *set wages 4
+  *set maren_rel -10
+  *set tobin_rel -15
+  *set ysolde_rel -12
+  *set clarimond_rel -10
+  *set cateline_rel -5
+  *set alisoun_rel -12
+  *set bastard_rumor_level +20
+  *gosub_scene startup recalc_stats
+  *return
+*else
+  ------------------------------------------------------------
+  [b]THIRD LAPSE OF DUTY — DISMISSAL AND THE FALLEN BRANCH[/b]
+  ------------------------------------------------------------
+  "Enough!" Master Corwin Dray snaps your stable-tally in half and throws the pieces into the kennel mud. "Not even for Sir Edmund's memory will I harbor an oath-breaker whom Piers has caught with stolen tack in his straw. Strip off the King's Mews badge and get you beyond the walls!"
+  Cast out of the Royal Castle in disgrace and turned away from Uncle Tobin's threshold, you are forced down into the fetid mire of [b]Bridgefoot and the Stews[/b], bound as a branded drover and night-carter along the Great Bridge. A darker, fallen road opens before you.
+  *set fallen_branch true
+  *set wages 3
+  *set title "Branded Drover of Bridgefoot"
+  *set city_reputation "Disgraced Outcast of Bridgefoot"
+  *gosub_scene startup recalc_stats
+  *return
+
+*comment ============================================================
+*comment 6. WORLD SIMULATION & YEAR SUMMARY
+*comment ============================================================
+*label year_summary_beat
+*comment Simulate dynamic changes in the 9 districts the player did NOT visit, plus aging and reputation spread
+*set age +1
+*set maren_age +1
+*set tobin_age +1
+*set wenna_age +1
+*set corwin_age +1
+
+*if visited_district_this_year != "The Gilded Row"
+  *set gilded_prosperity +2
+  *set gilded_fear +3
+  *if roderic_power >= 70
+    *set gilded_control "Lord Roderic and the De Varenne Affinity"
+*if visited_district_this_year != "Bridgefoot and the Stews"
+  *set bridgefoot_prosperity -2
+  *set bridgefoot_fear +4
+  *if bridgefoot_fear >= 80
+    *set bridgefoot_control "The Red Hook Cutthroats"
+*if visited_district_this_year != "Merchant Row and the Docks"
+  *set docks_prosperity +3
+  *set docks_fear +2
+*if visited_district_this_year != "The Craftsmen's Ward"
+  *if maren_job_lost
+    *set craftsmens_prosperity -4
+    *set craftsmens_fear +5
+  *else
+    *set craftsmens_prosperity +2
+
+*if honor >= 70
+  *set city_reputation "Honorable Son of Sir Edmund"
+  *set bastard_rumor_level -5
+*elseif infamy >= 70
+  *set city_reputation "Feared Blade of the Alleys"
+  *set bastard_rumor_level +10
+*elseif fallen_branch
+  *set city_reputation "Branded Drover of Bridgefoot"
+*else
+  *set city_reputation "Known Groom of the Outer Ward"
+
+============================================================
+YEAR ${year} SUMMARY — LEDGER OF DEEDS AND OMISSIONS
+============================================================
+- [b]Protagonist:[/b] ${name} ${surname} (Now Age ${age}), known as [i]${title}[/i] (${city_reputation}).
+- [b]Visible Standing:[/b] Honor ${honor}% | Infamy ${infamy}% | Purse: ${coins} silver pennies.
+- [b]Duty Shifts at the Royal Mews:[/b]
+*if did_mews_duty
+  COMPLETED — You stood your watch at the stalls. (Rival Piers status: ${piers_state}).
+*else
+  MISSED — You neglected your shifts; Piers used your absence to frame you and spread bastard rumors.
+- [b]Family Obligation at Tobin Hale's Bakery:[/b]
+*if did_family_duty
+  COMPLETED — You hauled meal-sacks for your mother Maren (Age ${maren_age}) and satisfied Uncle Tobin (Age ${tobin_age}).
+*else
+  MISSED — You left your mother to labor alone at the ovens. (Tobin's patience remaining: ${tobin_patience}; Maren lost bakehouse post: ${maren_job_lost}).
+- [b]District Visited This Year:[/b] ${visited_district_this_year}.
+- [b]The Lightbearer Festival and Joust:[/b]
+*if did_festival
+  COMPLETED — You worked the royal tournament lists (Prince's horse: ${prince_horse_fate}).
+*else
+  MISSED — You shirked your festival post at the lists.
+- [b]Year's Main Plot Beat (Lord Roderic & the Precontract):[/b]
+*if did_main_plot
+  COMPLETED — You acted on the summons (Evidence gathered: ${plot_evidence}; Roderic's court power: ${roderic_power}).
+*else
+  MISSED — You ignored the summons, allowing Lord Roderic to strengthen his grip (${roderic_power}).
+- [b]Total Duty Lapses:[/b] ${lapses} (Fallen Branch active: ${fallen_branch}).
+- [b]City Shifts While You Were Away:[/b]
+  - The Gilded Row: Prosperity ${gilded_prosperity}, Fear ${gilded_fear}, controlled by ${gilded_control}.
+  - Bridgefoot & the Stews: Prosperity ${bridgefoot_prosperity}, Fear ${bridgefoot_fear}, controlled by ${bridgefoot_control}.
+  - Craftsmen's Ward: Prosperity ${craftsmens_prosperity}, Fear ${craftsmens_fear}, controlled by ${craftsmens_control}.
+  - Merchant Row & Docks: Prosperity ${docks_prosperity}, Fear ${docks_fear}, controlled by ${docks_control}.
+
+*temp next_year 2
+*set next_year year + 1
+How would you proceed as the New Year bells ring across the confluence of the Aur and the Thel?
+
+*choice
+  #Enter Year ${next_year} of my life in the capital and visit another district.
+    *set year +1
+    *goto hub_start
+  #Conclude the opening chronicle here and review my standing in the capital.
+    *goto ending_reflection
+
+*label ending_reflection
+Stand where the Keep guards the bridge to Cathedral Isle and look back across the smoke-stained roofs of the capital: fifty thousand souls packed between the Cut and the Aurthel, where stone kings watch from soot-blackened niches and a knight's disinherited son carves his name in mud, ink, or blood.
+
+Whether you rise as [i]${title}[/i] to unseat Lord Roderic Harrowmere in the high courts or rule the dark sluices from Bridgefoot to the Docks, the city remembers every oath you kept and every duty you broke.
+*ending

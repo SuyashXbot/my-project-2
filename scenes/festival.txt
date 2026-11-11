@@ -1,0 +1,187 @@
+*label festival_start
+*set festival_count +1
+
+The eve of the [b]Lightbearer Festival[/b] sets both rivers ablaze with floating tallow-cressets. From the high western portals of Cathedral Isle, three hundred choristers and guild-wardens march two by two across the Bishop's Bridge past the Keep, each carrying a four-pound candle of bleached beeswax in honor of the Lightbearer, who drives back the pestilence-mist and winter dark. Great bonfires of dry gorse and tar-barrels roar at every conduit-head, roasting whole oxen while tumblers, pardoner-friars, and pickpockets pack the timber-framed lanes.
+
+*if festival_count = 1
+  This is your first Lightbearer tournament in the capital. Along the eastern ditch of the Outer Ward, carpenters have erected the double-railed lists and hung the galleries with scarlet arras.
+*elseif prince_horse_fate = "protected"
+  Because you guarded Prince Halric's charger from sabotage at the last festival, the Prince's master-of-horse greets you by name at the royal pavilion and tosses you a silver penny for drink-silver.
+  *set coins +1
+*elseif prince_horse_fate = "tampered"
+  Since Prince Halric's stirrup-leather gave way at the last Lightbearer tilt, iron-helmed sergeants now patrol the horse-lines with drawn bills, and whispers of treason still hang over the Mews.
+*else
+  Another midsummer has come round; the banners above the lists are faded by a year of river-salt, and the rivalry between Prince Halric, his younger brother Prince Cassian, and your uncle Lord Roderic's faction has grown sharper.
+
+*comment ============================================================
+*comment PHASE 1: PREPARING THE HORSES & THE PRINCE'S DESTRIER
+*comment ============================================================
+In the stifling heat of the royal horse-tent, you oil the leather barding and check the steel chanfrons. In the velvet-hung stall at the tent's center stands [b]Soleil[/b], the white Andalusian stallion of [b]Prince Halric[/b], who is set to run three courses with the heavy ash lance against [b]Sir Morvan of the Fen[/b]—the champion wearing the black boar badge of your uncle, [b]Lord Roderic Harrowmere[/b].
+
+Through a slit in the canvas behind the water-butts, a hooded squire wearing the silver swan of the De Varenne affinity—allied with your uncle Roderic—slides a horn vial of blister-beetle oil and a notched curb-chain into the straw by your boot, whispering:
+[i]"Ten silver pennies if Prince Halric's stallion rears at the trumpet and lets Lord Roderic's champion take the golden coronal, groom. Or look the other way while I rub the beetle-oil under his saddle-pad myself."[/i]
+
+How do you handle the horses and the plot against the Prince's mount?
+
+*choice
+  #Guard Prince Halric's stallion fiercely—seize the saboteur's vial, double-rivet the harness, and report the plot to Master Corwin.
+    *set prince_horse_fate "protected"
+    *set duty +5
+    *set empathy +2
+    *set corwin_rel +8
+    *set roderic_power -6
+    *set coins +4
+    *gosub_scene startup recalc_stats
+    You catch the hooded squire by the throat through the canvas slit, wrench the horn vial of blister-beetle oil from his fingers, and strike the notched curb-chain into the mud before blowing your horn-whistle for Master Corwin. The squire wrenches free and flees into the crowd, but Prince Halric's marshal rewards your vigilance with four silver pennies and a nod of high favor.
+    *goto joust_and_gamble
+  #Prepare the horses with meticulous care, then secretly transfer the notched curb-chain onto the destrier of Lord Roderic's own champion, Sir Morvan!
+    *set prince_horse_fate "protected"
+    *set ambition +4
+    *set cruelty +2
+    *set duty +1
+    *set roderic_power -8
+    *gosub_scene startup recalc_stats
+    You leave Prince Halric's white stallion untouched and sound as a bell. Then, carrying a water-bucket past the black boar pavilion of Harrowmere, you deftly swap the weakened curb-chain onto Sir Morvan's bay charger. Let your uncle Roderic's champion taste the mud he bought for another man.
+    *goto joust_and_gamble
+  #Accept the ten silver pennies and rub the blister-beetle oil under the saddle of Prince Halric's innocent stallion.
+    *if (empathy >= 55) or (cruelty <= 45)
+      *comment Hidden stats drive hesitation or refusal when ordered to harm innocents
+      You unstop the horn vial, and the acrid stench of crushed spanish-fly rises to your nostrils. The great white stallion Soleil nudges your shoulder trustingly, searching your apron for a crust of salted bread—just as your father's old warhorse used to do in the orchard at Harrowmere.
+      Your hand trembles and refuses the work. Even for ten silver pennies, you cannot cripple a noble beast or break an innocent rider's spine in the lists. You hurl the vial into the drainage ditch, spit on the squire's bribe, and cinch the Prince's saddle true.
+      *set prince_horse_fate "protected"
+      *set empathy +4
+      *set duty +3
+      *set cruelty -3
+      *gosub_scene startup recalc_stats
+      *goto joust_and_gamble
+    *else
+      With cold, steady fingers, you pocket the ten silver pennies and smear the burning beetle-oil beneath the linen pad where the cantle presses the stallion's spine. You step back into the shadow of the tent and wait for the trumpets.
+      *set prince_horse_fate "tampered"
+      *set coins +10
+      *set cruelty +5
+      *set ambition +4
+      *set empathy -4
+      *set duty -4
+      *gosub_scene startup recalc_stats
+      *goto joust_and_gamble
+
+*comment ============================================================
+*comment PHASE 2: WATCHING THE JOUSTS & GAMBLING AT THE RAILS
+*comment ============================================================
+*label joust_and_gamble
+The heralds sound the [i]laissez-aller[/i] upon silver clarions. Fifty thousand voices roar from the scaffolds and the Castle battlements as the knights thunder down the sanded tilt-yard, shields splintering under coronal-headed lances.
+
+By the grooms' barrier, a red-faced dice-keeper with a chalked slate takes wagers on the main course between [b]Prince Halric[/b] and [b]Sir Morvan[/b], champion of Lord Roderic Harrowmere. You have ${coins} silver pennies in your pouch.
+
+*choice
+  *selectable_if (coins >= 4) #Wager 4 silver pennies on Prince Halric to unhorse Lord Roderic's champion, and cheer from the barrier!
+    *set coins -4
+    *if prince_horse_fate = "protected"
+      *set coins +10
+      *set tournament_winner "Prince Halric"
+      *set roderic_power -5
+      Riding a sound and fiery stallion, Prince Halric couches his painted ash-lance dead center upon Sir Morvan's black boar shield! Wood splinters fly fifty feet into the air as Roderic's champion is lifted clean from his high cantle and crashes into the sand. You collect ten silver pennies from the chalk-man as the commons roar!
+      *goto festival_romance
+    *else
+      *set tournament_winner "Sir Morvan"
+      *set roderic_power +5
+      Halfway down the barrier, Prince Halric's maddened stallion bucks wildly, throwing off his aim; Sir Morvan's lance takes the Prince on the pauldrons and wins the course on points, costing you your four pennies.
+      *goto festival_romance
+  *selectable_if (coins >= 4) #Wager 4 silver pennies on Sir Morvan of Harrowmere—hedging my purse against my own blood-enemy.
+    *set coins -4
+    *set ambition +2
+    *gosub_scene startup recalc_stats
+    *if prince_horse_fate = "tampered"
+      *set coins +10
+      *set tournament_winner "Sir Morvan"
+      *set roderic_power +6
+      Just as the trumpets blare, the blister-oil bites into Soleil's back! The white stallion plunges sideways into the tilt-rail, snapping Prince Halric's lance-rest, while Sir Morvan rides the course triumphant. You pocket ten silver pennies of bitter coin while Lord Roderic's box cheers.
+      *goto festival_romance
+    *else
+      *set tournament_winner "Prince Halric"
+      Prince Halric rides like a thunderbolt and unseats Sir Morvan in a cloud of yellow sand. You lose your four silver pennies, though watching Roderic's champion groan in the dirt nearly pays for the loss.
+      *goto festival_romance
+  #Keep my silver in my purse and watch the jousts closely to study the knights' guard and lance-play.
+    *set duty +2
+    *set ambition +2
+    *gosub_scene startup recalc_stats
+    You lean both elbows on the timber barrier, your eyes tracking every shift of stirrup and shield-angle as Sir Edmund taught you.
+    *if prince_horse_fate = "tampered"
+      *set tournament_winner "Sir Morvan"
+      Prince Halric's mount bolts from the beetle-oil, handing the prize to Sir Morvan.
+    *else
+      *set tournament_winner "Prince Halric"
+      Prince Halric shatters three lances in high style and takes the golden Lightbearer coronal over Sir Morvan.
+    *goto festival_romance
+
+*comment ============================================================
+*comment PHASE 3: MEETING THE LOVE INTERESTS BY BONFIRE LIGHT
+*comment ============================================================
+*label festival_romance
+As twilight falls, the great Lightbearer bonfires are kindled from the Market Square to the Outer Ward. Sparks swirl up toward the stars like golden bees, and the smell of roasted marrow-bones, spilled pigment-wine, and warm beeswax fills the air.
+
+With the horses rubbed down and watered, you have an hour among the bonfires and pavilions. Whom do you seek out in the lantern-glow?
+
+*choice
+  #Slip behind the scarlet hangings of the noble gallery to speak with Lady Ysolde de Varenne.
+    *set ysolde_met true
+    *if ysolde_status = "unmet"
+      *set ysolde_status "acquainted"
+    *if (honor >= 52) or (ambition >= 55)
+      *set ysolde_rel +8
+      *set ambition +2
+      *gosub_scene startup recalc_stats
+      Lady Ysolde stands near the gallery stair in a gown of damasked murrey velvet, a beeswax taper in her gloved hand. When she sees the soot and horse-sweat on your sleeve, she does not call the usher; instead she steps into the shadow of the arras.
+      "My aunt Bellisant sat two benches away with Lord Roderic, praying you would disgrace yourself in the mud," Ysolde murmurs, tilting her chin so the bonfire light catches her throat. "Yet you carry yourself more like a knight than half the popinjays in the lists, ${name}. Walk with me as far as the Gilded Row wicket."
+    *else
+      *set ysolde_rel +2
+      Lady Ysolde glances down from the gallery rail with cool appraisal, tossing you a knot of silk ribbon dipped in rosewater before her kinsmen summon her back to the banquet table.
+    *goto festival_end
+  #Seek out Clarimond of Saint Jude's by the heralds' tallies near the Tower of the Archivians gate.
+    *set clarimond_met true
+    *if clarimond_status = "unmet"
+      *set clarimond_status "acquainted"
+    *if (duty >= 52) or (empathy >= 52)
+      *set clarimond_rel +8
+      *set duty +2
+      *set plot_evidence +1
+      *gosub_scene startup recalc_stats
+      You find Clarimond shielding her votive candle with her parchment-portfolio while the heralds record the broken lances. Her cheeks flush warm pink above her ink-stained collar when you offer her a honeyed wafer from the stalls.
+      "Look here, ${name}," she whispers, drawing you behind a stone buttress and pointing to an old tournament roll from nineteen summers ago. "Your father Sir Edmund rode in this very list—and the herald entered his marriage to your mother Maren as [i]legitima per dispensationem[/i]. Roderic had the page scraped in the bishop's book, but he forgot the herald's roll!"
+    *else
+      *set clarimond_rel +3
+      Clarimond shares her beeswax taper to light yours and warns you that Roderic's clerks have been bribing the under-keepers at the Tower.
+    *goto festival_end
+  #Join Cateline "Cat" Rook behind the wine-booths where the river-folk dance around a tar-barrel fire.
+    *set cateline_met true
+    *if cateline_status = "unmet"
+      *set cateline_status "acquainted"
+    *if (infamy >= 50) or (ambition >= 52)
+      *set cateline_rel +8
+      *set ambition +2
+      *set coins +3
+      *gosub_scene startup recalc_stats
+      Cateline catches your wrist and pulls you into the whirling ring of apprentices and boatmen leaping through the bonfire smoke for luck. Laughing breathless against your chest, she slips three silver pennies into your palm—your share of a fat bailiff's purse lifted during the fanfare.
+      "You move like a wolf among sheep, ${name}," she grins, her red hair glittering with wood-sparks. "Stay close to me when the lanterns go out."
+    *else
+      *set cateline_rel +4
+      Cateline shares a leather jack of spiced wine with you by the barrier and points out which cutpurses to avoid on your walk back to the hayloft.
+    *goto festival_end
+  #Help Alisoun Verrier dress the cuts and bruises of injured squires at the herb-tent by the lists gate.
+    *set alisoun_met true
+    *if alisoun_status = "unmet"
+      *set alisoun_status "acquainted"
+    *if (empathy >= 52) or (honor >= 52)
+      *set alisoun_rel +8
+      *set empathy +3
+      *gosub_scene startup recalc_stats
+      You hold the lantern and draw clean well-water while Alisoun stitches a young squire's split brow with boiled silk thread and betony salve. When the tent finally quiets, she washes the blood and dust from your knuckles with warm rosemary water, her fingers lingering over yours.
+      "Every man here cheers when lances break bones," she says softly, leaning her forehead for a heartbeat against your shoulder. "Thank the Lightbearer you have not let the castle turn your heart to iron, ${name}."
+    *else
+      *set alisoun_rel +4
+      Alisoun thanks you for carrying her herb-baskets through the crush and sends a blessed beeswax stub home to your mother in Bakehouse Lane.
+    *goto festival_end
+
+*label festival_end
+As the curfew bell tolls from the Keep and the last bonfire embers sink into red ash, you lead the weary warhorses back to the Royal Mews.
+*return

@@ -1,0 +1,106 @@
+*label start_keep_cathedral
+*set keep_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (202 words, 10 named streets/buildings)
+*comment ============================================================
+At the southern prow of the walled island, where the brown current of the [b]Aur[/b] and the green tide of the [b]Thel[/b] collide in a churning race to form the [b]Aurthel[/b], stands [b]The Confluence Keep[/b]. Within its battlemented water-bastions, crossbowmen oil windlasses inside [b]The Royal Arsenal[/b] and men-at-arms dice in [b]The Garrison Hall[/b] above [b]Powder-Magazine Vault[/b], guarding the chained drawbridge of [b]Bishop's Bridge[/b]. Across that narrow stone span rises [b]Cathedral Isle[/b], a sacred precinct where the smell of burning frankincense, damp river-moss, and tallow votives hangs thick along [b]Paternoster Row[/b] and [b]Canon's Close[/b]. Above the parvis soars the twin-towered west front of [b]The Cathedral of the Lightbearer[/b], its tiered stone [b]Gallery of Kings[/b] looking down upon pilgrims drawing holy water from [b]Saint Aldous's Well[/b]. Behind the flying buttresses stand the crenellated [b]Bishop's Palace[/b] and the ecclesiastical courtroom of [b]The Consistory Court[/b], where twenty household clerks and chaplains lodge under the bishop's roof. Along the crypt steps of [b]Charnel Chapel[/b], stacked femur-bones behind iron grilles remind every passerby of the Great Pestilence, when barges piled with shrouded dead jammed the arches of [b]Bishop's Bridge[/b].
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${keep_prosperity} | Fear ${keep_fear} | Controlled by: [i]${keep_control}[/i] (Visit #${keep_visits})
+------------------------------------------------------------
+
+*comment ============================================================
+*comment EVENT 1: THE GALLERY OF KINGS & BELOVED KING ALDOUS III (STATUE #3)
+*comment ============================================================
+Standing in the cathedral parvis at the foot of [b]Paternoster Row[/b], you look up at the [b]Gallery of Kings[/b] carved across the west facade of [b]The Cathedral of the Lightbearer[/b]. Twelve crowned monarchs stand in trefoil niches, but it is the lower life-sized effigy beside the portal—[b]King Aldous III the Confessor[/b], the most beloved king in the realm's memory, who opened the royal granaries during the Great Famine and pardoned the peasants' tax—whose stone feet are worn smooth and golden by a hundred years of kisses and candle-grease.
+
+How do you act before the beloved statue of King Aldous III in the Gallery of Kings?
+
+*choice
+  #Touch the worn stone foot of Beloved King Aldous III and pray for the peace of my father Sir Edmund's soul.
+    *set statues_prayed +1
+    *set empathy +4
+    *set duty +2
+    *gosub_scene startup recalc_stats
+    You lay your palm upon the stone instep warmed by a hundred pilgrims' candles along [b]Paternoster Row[/b], whispering a prayer for Sir Edmund and for your mother's strength. A passing canon of [b]Canon's Close[/b] blesses you in the Lightbearer's name.
+    *goto keep_event_2
+  *selectable_if (coins >= 1) #Buy a beeswax taper and leave a silver penny in King Aldous's alms-box for the lepers and plague-orphans.
+    *set coins -1
+    *set statues_offered +1
+    *set empathy +4
+    *set duty +3
+    *set keep_prosperity +3
+    *gosub_scene startup recalc_stats
+    Your beeswax candle joins the blazing constellation before [b]King Aldous III[/b], and your penny clinks into the iron box that feeds the orphans of [b]Charnel Chapel[/b]. Word of your charity spreads among the cathedral almoners.
+    *goto keep_event_2
+  #Pry a gilded copper rosette from the niche of the Gallery of Kings and scratch my own mark into the stone molding.
+    *set statues_defaced +1
+    *set cruelty +4
+    *set ambition +3
+    *set empathy -3
+    *set coins +2
+    *set keep_fear +4
+    *gosub_scene startup recalc_stats
+    When the verger turns toward [b]Saint Aldous's Well[/b], you wrench a gilded bronze boss from the lower molding of the [b]Gallery of Kings[/b], pocketing two pennies' worth of metal and leaving a raw scar in the beloved king's niche.
+    *goto keep_event_2
+
+*comment ============================================================
+*comment EVENT 2: THE ROYAL ARSENAL AT THE CONFLUENCE KEEP
+*comment ============================================================
+*label keep_event_2
+Crossing back over [b]Bishop's Bridge[/b] into [b]The Confluence Keep[/b], you pass the open forge-doors of [b]The Royal Arsenal[/b] and [b]The Garrison Hall[/b]. Inside, the Master Fletch-Maker is stamping bundles of heavy steel-tipped crossbow quarrels with the castle broad-arrow—and on his bench lies a broken quarrel shaft brought in from the country, identical in its triple-brass binding to the bolts that slew your father Sir Edmund!
+
+*choice
+  #Question the Master Fletch-Maker using my father's old campaigning stories until he reveals which lord bought that pattern of quarrel.
+    *set duty +3
+    *set ambition +3
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    When you name the exact draw-weight of the Genoese cranequin required to fire such a bolt, the old armorer of [b]The Royal Arsenal[/b] squints at you with respect. "Only one baron in the northern shires ordered brass-ringed quarrels from my bench two summers back, lad—[b]Lord Roderic Harrowmere[/b], who paid for three dozen through his bailiff!"
+    *goto keep_event_3
+  #Help the garrison sergeants haul saltpetre casks into the Powder-Magazine Vault for three silver pennies of heavy-duty pay.
+    *set duty +3
+    *set coins +3
+    *set keep_prosperity +2
+    *gosub_scene startup recalc_stats
+    You shoulder the heavy oak kegs down the winding stair of [b]Powder-Magazine Vault[/b] beside the river-gate, earning three silver pennies and the camaraderie of the [b]Garrison Hall[/b] watch.
+    *goto keep_event_3
+  #Steal a bundle of armor-piercing quarrels and a steel poniard from The Royal Arsenal while the sergeants dice.
+    *set ambition +4
+    *set cruelty +2
+    *set duty -3
+    *set coins +4
+    *set keep_fear +4
+    *gosub_scene startup recalc_stats
+    Slipping beneath the shadow of the windlass-racks, you slide a fine Milanese poniard and a sheaf of bolts under your cloak, selling the spare iron down the river for four pennies.
+    *goto keep_event_3
+
+*comment ============================================================
+*comment EVENT 3: THE CONSISTORY COURT & THE BISHOP'S PALACE
+*comment ============================================================
+*label keep_event_3
+Back across [b]Bishop's Bridge[/b] outside [b]The Consistory Court[/b] and the [b]Bishop's Palace[/b], an elderly country summoner—the very official who nailed the decree of bastardy to Harrowmere church door—emerges into [b]Canon's Close[/b], coughing into a linen rag and counting a purse of Lord Roderic's silver beside [b]Charnel Chapel[/b].
+
+*choice
+  #Confront the summoner before the steps of The Consistory Court and compel him on his fear of hellfire to admit who paid him to suppress the banns.
+    *set duty +4
+    *set empathy +2
+    *set plot_evidence +1
+    *set roderic_power -5
+    *gosub_scene startup recalc_stats
+    Standing beside the skull-grilles of [b]Charnel Chapel[/b], you remind the coughing summoner how soon he will lie among those bones after the Great Pestilence. Trembling, he confesses before two passing clerks that Sir Edmund's marriage was lawful and that Lord Roderic paid him six marks to hide the archdeacon's license!
+    *goto keep_end
+  #Follow the summoner into the shadow of Bishop's Bridge, knock him into the kennel, and take Roderic's silver purse from his belt.
+    *set cruelty +4
+    *set ambition +3
+    *set empathy -3
+    *set coins +5
+    *set keep_fear +4
+    *gosub_scene startup recalc_stats
+    Halfway across the river-arch of [b]Bishop's Bridge[/b], you drive your shoulder into the summoner's back, snatching five silver pennies and his parchment seal-bag before vanishing toward the Keep gate.
+    *goto keep_end
+
+*label keep_end
+As vespers ring from [b]The Cathedral of the Lightbearer[/b] and the chains of [b]Bishop's Bridge[/b] groan tight for the night, you take your leave of [b]The Keep and Cathedral Isle[/b].
+*return

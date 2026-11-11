@@ -1,0 +1,108 @@
+*label start_northgate_abbey
+*set northgate_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (203 words, 10 named streets/buildings)
+*comment ============================================================
+Across the northern neck of the island runs [b]The Cut[/b], a deep stone-lined canal linking the [b]Aur[/b] at [b]West Sluice-Gate[/b] to the [b]Thel[/b] at [b]East Sluice-Gate[/b], where green water roars through iron-bound oak flood-paddles. Only a single fortified bridge crosses that moat: [b]Northgate Bridge[/b], whose machicolated gatehouse towers display the carved stone niches of [b]King Edric the Wall-Maker[/b] above drovers' carts queuing along [b]Toll-Bar Approach[/b] and [b]Sluice-Keepers' Row[/b]. Beyond the portcullis, the city's stench of tallow and kennel-mire gives way to wet bracken, leaf-mold, and woodsmoke rising from [b]The Royal Hunting Park[/b], where fallow deer browse behind [b]King's Pale[/b] and the master-forester's hounds bay at [b]Hart's Leap Lodge[/b]. East of the park oaks rise the limestone bell-towers and herb-cloisters of [b]Saint Wulfric's Abbey[/b], where Benedictine monks brew abbey double-ale beside [b]Pilgrims' Guest-Hall[/b] and [b]Abbot's Conduit[/b]. Yet even here the city's dark memory lingers: when the curfew bell rings from the abbey tower across the canal, carters cross themselves passing [b]Lazar-House Cross[/b] at the park edge, where the Great Pestilence filled the abbey infirmary until the monks walled up the northern cloister walk.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${northgate_prosperity} | Fear ${northgate_fear} | Controlled by: [i]${northgate_control}[/i] (Visit #${northgate_visits})
+------------------------------------------------------------
+
+*comment ============================================================
+*comment EVENT 1: THE NICHES AT NORTHGATE — KING EDRIC THE WALL-MAKER (STATUE #5)
+*comment ============================================================
+Passing beneath the portcullis teeth of [b]Northgate Bridge[/b], you look up at the twin freestone niches flanking the outer arch, where stands the armored statue of [b]King Edric the Wall-Maker[/b]—the fifth of the city's great royal effigies, who dug [b]The Cut[/b] from river to river and raised the island's northern rampart against invaders. In his carved gauntlets he holds a mason's plumb-line and a miniature gatehouse.
+
+How do you act before the statue of King Edric in the niches at Northgate?
+
+*choice
+  #Bow beneath the gatehouse niche and pray to King Edric for the strength to defend my family's threshold.
+    *set statues_prayed +1
+    *set duty +4
+    *set empathy +2
+    *gosub_scene startup recalc_stats
+    You touch your brow below the niche of [b]King Edric the Wall-Maker[/b], asking for the steadfastness of stone against your uncle Roderic's assaults. The gate-wardens along [b]Toll-Bar Approach[/b] nod with respect at a Castle groom who honors the Wall-Maker.
+    *goto northgate_event_2
+  *selectable_if (coins >= 1) #Drop a silver penny into the bridge-chapel box below King Edric's feet for the maintenance of the Cut and the poor lepers of Lazar-House Cross.
+    *set coins -1
+    *set statues_offered +1
+    *set empathy +4
+    *set duty +3
+    *set northgate_prosperity +3
+    *gosub_scene startup recalc_stats
+    Your silver penny clinks into the iron-strapped bridge-box below [b]King Edric's[/b] niche, helping to grease the windlasses of [b]West Sluice-Gate[/b] and buy loaves for the sick at [b]Lazar-House Cross[/b].
+    *goto northgate_event_2
+  #Climb the wheel-guard stone after dusk and chip the mason's plumb-line from King Edric's gauntlet with my dagger-hilt.
+    *set statues_defaced +1
+    *set cruelty +3
+    *set ambition +3
+    *set duty -3
+    *set northgate_fear +4
+    *gosub_scene startup recalc_stats
+    Standing on the iron-bound wheel-guard of [b]Northgate Bridge[/b], you strike off the carved stone plumb-line and pocket the lead dowel inside it while the sentries look toward [b]Sluice-Keepers' Row[/b].
+    *goto northgate_event_2
+
+*comment ============================================================
+*comment EVENT 2: SAINT WULFRIC'S ABBEY & THE HARROWMERE CHARTER
+*comment ============================================================
+*label northgate_event_2
+Walking up the cobbled causeway past [b]Abbot's Conduit[/b] to [b]Saint Wulfric's Abbey[/b], you enter the vaulted porch of [b]Pilgrims' Guest-Hall[/b]. The old abbey infirmarer, Brother Anselm of the North, recognizes the Harrowmere cast of your features; nineteen summers ago, your father [b]Sir Edmund[/b] and your mother [b]Maren[/b] lodged at this very guest-hall on the night before he rode into the city to pay Lady Bellisant's precontract composition!
+
+However, a bailiff of [b]Lord Roderic Harrowmere[/b] is already inside the cloister parlor, offering Abbot Gervase a gift of ten fat bucks from Harrowmere chase if the abbey surrenders the old Guest-Hall roll where Sir Edmund signed his name alongside Maren as [i]uxor mea legitima[/i].
+
+*choice
+  #Appeal to Abbot Gervase and the old infirmarer in the name of Holy Church and Sir Edmund's alms to preserve the Guest-Hall roll.
+    *set duty +4
+    *set empathy +3
+    *set plot_evidence +1
+    *set roderic_power -6
+    *set northgate_prosperity +3
+    *gosub_scene startup recalc_stats
+    Kneeling on the flagstones beside [b]Abbot's Conduit[/b], you remind the Abbot that your father gave a silver chalice to [b]Saint Wulfric's Abbey[/b] on the day he wed your mother. Moved by your truth, the old infirmarer hands you a sealed transcript of the guest-roll and orders Roderic's bailiff out of the precinct!
+    *goto northgate_event_3
+  #Slip through the herb-cloister while the Abbot prays nones and swap the Guest-Hall roll for a blank vellum skin—taking Roderic's bribe-purse from his saddlebags at the gate!
+    *set ambition +4
+    *set cruelty +2
+    *set plot_evidence +1
+    *set coins +5
+    *gosub_scene startup recalc_stats
+    Moving silently along the walled-up plague walk of the northern cloister, you lift the true Guest-Hall membrane into your jerkin, leave a blank roll in its cylinder, and relieve Roderic's unguarded pack-mule outside [b]Pilgrims' Guest-Hall[/b] of five silver pennies.
+    *goto northgate_event_3
+
+*comment ============================================================
+*comment EVENT 3: THE ROYAL HUNTING PARK & THE POACHER'S CHILD
+*comment ============================================================
+*label northgate_event_3
+Returning toward [b]The Cut[/b] along the oak palings of [b]King's Pale[/b], you hear hounds baying near [b]Hart's Leap Lodge[/b] inside [b]The Royal Hunting Park[/b]. The Deputy Forester has caught an elderly widow from [b]Sluice-Keepers' Row[/b] and her ten-year-old grandson gathering fallen wind-blown deadwood and a snared coney inside the royal covert. Under the harsh forest law, the Deputy Forester draws his hunting-knife to slit the boy's forefinger joint as a poacher's mark, and orders you as a Castle groom to hold the child across the oak stump.
+
+*choice
+  #Step over King's Pale and use Master Corwin Dray's hunting-stable token to claim the boy was gathering birch-twigs for the Royal Mews besoms!
+    *set empathy +5
+    *set duty +3
+    *set cruelty -2
+    *set northgate_fear -5
+    *gosub_scene startup recalc_stats
+    Holding up your brass Mews tally before [b]Hart's Leap Lodge[/b], you swear the boy was sent by the Castle stables to cut birch-brooms under ancient purveyance custom. The Deputy Forester sheathes his knife grumbling, and the weeping widow blesses your mother's name all the way back to [b]West Sluice-Gate[/b].
+    *goto northgate_end
+  #Take hold of the boy's shoulder by the oak stump as ordered—until my own heart decides whether the knife falls.
+    *if (empathy >= 52) or (cruelty <= 48)
+      *comment Hidden stats drive hesitation or refusal when ordered to harm innocents
+      You look down at the terrified child pressed against the mossy oak stump beside [b]King's Pale[/b] while the hounds snarl at his bare heels. Your blood rebels against maiming a starving child for a rabbit and a bundle of dry sticks. You wrench the boy behind your back, knock the Deputy Forester into the bracken with your elbow, and hustle the grandmother and child safely across [b]East Sluice-Gate[/b] before the horn sounds!
+      *set empathy +4
+      *set cruelty -3
+      *gosub_scene startup recalc_stats
+      *goto northgate_end
+    *else
+      You hold the boy still upon the stump while the forest law takes its toll, accepting two silver pennies of forester's fee before walking back toward the canal.
+      *set cruelty +5
+      *set empathy -4
+      *set coins +2
+      *set northgate_fear +5
+      *gosub_scene startup recalc_stats
+      *goto northgate_end
+
+*label northgate_end
+As the iron portcullis of [b]Northgate Bridge[/b] groans down between the roaring waters of [b]West Sluice-Gate[/b] and [b]East Sluice-Gate[/b], you cross [b]The Cut[/b] back into the walled city.
+*return

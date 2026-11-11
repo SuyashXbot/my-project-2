@@ -1,0 +1,119 @@
+*label start_docks
+*set docks_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (199 words, 10 named streets/buildings)
+*comment ============================================================
+Along the eastern bank outside the city wall, where deep-hulled Flanders cogs and Gascon wine-carracks ride the tide of the [b]Thel[/b], stretches [b]Merchant Row and the Docks[/b]. Great treadwheel cranes creak above the tarred oak pilings of [b]Billingsgate Wharf[/b] and [b]Queen's Quay[/b], hoisting tuns of Bordeaux claret, Baltic pitch, and salted barrel-herring past the stone weigh-beam of [b]The King's Custom House[/b]. Above the mud-slick water-stairs of [b]Ropemakers' Lane[/b] and [b]Salt-Fish Row[/b], wealthy wool-staplers and Hansa factors lodge behind the carved brick gables of [b]The Steelyard Hall[/b], while sunburned mariners drink malmsey and throw dice beneath the whale-jaw sign of [b]The Three Anchors Inn[/b]. Between the hemp-walk and the fresh spring of [b]Sailors' Conduit[/b], chandlers boil Stockholm tar beside the crooked spire of [b]Saint Nicholas-at-the-Tide[/b], where wooden ship-models hang from the nave rafters for men lost at sea. At the southern slipway of [b]Rat-Stairs[/b], a row of charred warehouse ribs and lime-filled cellars still recalls the summer when a rat-borne ship from the Levant brought the Great Pestilence to the quays and half the lightermen died on their oars.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${docks_prosperity} | Fear ${docks_fear} | Controlled by: [i]${docks_control}[/i] (Visit #${docks_visits})
+------------------------------------------------------------
+
+*comment ============================================================
+*comment EVENT 1: CATELINE "CAT" ROOK AT RAT-STAIRS & BILLINGSGATE WHARF
+*comment ============================================================
+Down at the fog-shrouded slipway of [b]Rat-Stairs[/b] below [b]Billingsgate Wharf[/b], a flat-bottomed lighter drifts in on the flood tide without a lantern. Standing on the wet gunwale in sea-boots and a salt-stiffened jerkin is [b]Cateline "Cat" Rook[/b], directing two river-boys as they unload oilskin bales of untaxed Genoese silk and Spanish iron before the searchers of [b]The King's Custom House[/b] make their rounds.
+*set cateline_met true
+*if cateline_status = "unmet"
+  *set cateline_status "acquainted"
+
+*if cateline_status = "rival"
+  Cateline's hand drops to the brass-hilted dirk at her belt when she sees you on [b]Rat-Stairs[/b]. "If you brought the castle searchers down [b]Ropemakers' Lane[/b], ${name}, the eels in the Thel will dine on you tonight."
+*else
+  Cateline leaps lightly from the lighter onto the mossy stone steps, her green eyes glinting beneath a knit Monmouth cap. "Right on the tide, ${name}! Lend a shoulder to this wine-anker before the Custom House watch turns [b]Salt-Fish Row[/b], and there is silver and a secret in it for you."
+
+*choice
+  *selectable_if ((infamy >= 46) or (ambition >= 48)) #Help Cateline haul the contraband up Ropemakers' Lane and hide with her inside the sail-loft when the watch passes.
+    *set cateline_rel +10
+    *if cateline_status = "acquainted"
+      *set cateline_status "courting"
+    *set ambition +3
+    *set cruelty +1
+    *set coins +5
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    You hoist the heavy oak anker onto your shoulder and follow Cateline up the secret trapdoor of a hemp-warehouse in [b]Ropemakers' Lane[/b]. Pressed close together in the dark among piles of canvas sailcloth while the watchmen's halberds clink below, Cateline laughs softly against your ear and counts five silver pennies into your palm.
+    "Listen to this, ${name}," she whispers, pulling a wax-sealed bill of lading from her jerkin. "Your uncle [b]Lord Roderic[/b] has been shipping felled oak from Harrowmere Park through [b]Queen's Quay[/b] under a false merchant's mark to pay Lady Bellisant's hush-money!"
+    *goto docks_event_2
+  #Stand lookout by Sailors' Conduit without touching the smuggled goods, warning Cateline when the Custom House clerk approaches.
+    *set empathy +2
+    *set duty +1
+    *set cateline_rel +6
+    *set coins +2
+    *gosub_scene startup recalc_stats
+    You lean by [b]Sailors' Conduit[/b] and whistle a groom's tune when the searchers round [b]The King's Custom House[/b], giving Cateline time to pole her lighter into the reed-beds. She tosses you two silver pennies across the water with a grateful wink.
+    *goto docks_event_2
+  #Tip off the searchers of The King's Custom House to seize the contraband barge for a lawful crown reward.
+    *set duty +4
+    *set ambition +2
+    *set cateline_rel -18
+    *set cateline_status "rival"
+    *set coins +4
+    *set docks_control "The King's Custom House"
+    *gosub_scene startup recalc_stats
+    You summon the chief searcher from [b]The King's Custom House[/b], who seizes the bales on [b]Billingsgate Wharf[/b] and pays you four pennies of informer's silver while Cateline dives into the [b]Thel[/b] and swears vengeance from the river-mist.
+    *goto docks_event_2
+
+*comment ============================================================
+*comment EVENT 2: THE STEELYARD HALL & THE WOOL-STAPLERS OF MERCHANT ROW
+*comment ============================================================
+*label docks_event_2
+Before the brick gateway of [b]The Steelyard Hall[/b] and [b]Queen's Quay[/b], a factor representing your uncle [b]Tobin Hale[/b] is bargaining with a Flemish shipmaster over twenty sacks of tallow and fine flour. A corrupt wharf-bailiff of [b]The Wharfinger Syndicate[/b] steps in, demanding a double cranage toll because rumours have reached the Docks that Tobin shelters the bastard family of Sir Edmund Harrowmere.
+
+*choice
+  #Confront the wharf-bailiff on Queen's Quay and prove by the chalked board of The King's Custom House that citizens' carts pay half-cranage.
+    *set duty +4
+    *set empathy +2
+    *set tobin_rel +6
+    *set docks_prosperity +4
+    *set docks_fear -3
+    *gosub_scene startup recalc_stats
+    You haul the painted tariff-board from the porch of [b]The King's Custom House[/b] and read the royal statute aloud before the Flemish merchants of [b]The Steelyard Hall[/b], shaming the syndicate bailiff into waving Uncle Tobin's wains through without extortion.
+    *goto docks_event_3
+  #Challenge the wharf-bailiff's bully-boy to a bout with dock-hooks and cudgels behind The Three Anchors Inn until he yields the quay.
+    *set cruelty +3
+    *set ambition +3
+    *set docks_fear +4
+    *set tobin_rel +4
+    *set coins +3
+    *gosub_scene startup recalc_stats
+    In the oyster-shell yard behind [b]The Three Anchors Inn[/b], you duck the bully's iron bale-hook and lay him flat in the brine with a split brow, winning three pennies from the cheering mariners and clearing the crane for your uncle's goods.
+    *goto docks_event_3
+
+*comment ============================================================
+*comment EVENT 3: THE CABIN-BOY AT SAINT NICHOLAS-AT-THE-TIDE
+*comment ============================================================
+*label docks_event_3
+Outside the church porch of [b]Saint Nicholas-at-the-Tide[/b] on [b]Salt-Fish Row[/b], a brutal cog-master with a tarred rope's-end is dragging a feverish, half-drowned cabin-boy away from the sanctuary ring on the oak door, ordering you to pry the child's bleeding fingers off the iron sanctuary knocker so he can haul him back to sea.
+
+*choice
+  #Defend the sanctuary right of Saint Nicholas-at-the-Tide and call the parish priest and mariners to protect the boy.
+    *set empathy +5
+    *set duty +3
+    *set cruelty -2
+    *set docks_prosperity +2
+    *set docks_fear -4
+    *gosub_scene startup recalc_stats
+    You step onto the stone porch and strike the tarred rope from the cog-master's hand. "His fingers hold the ring of Saint Nicholas; touch him and you answer to the Bishop's interdict!" The parish priest opens the wicket and takes the feverish boy inside to safety.
+    *goto docks_end
+  #Reach for the boy's wrists to wrench him from the sanctuary ring—until my own heart decides whether I can obey.
+    *if (empathy >= 52) or (cruelty <= 48)
+      *comment Hidden stats drive hesitation or refusal when ordered to harm innocents
+      Your hands close over the child's salt-cracked wrists—and you feel him shivering with ague against the iron ring of [b]Saint Nicholas-at-the-Tide[/b], crying for his mother as the pestilence-victims once cried on [b]Rat-Stairs[/b]. Your stomach knots; you refuse to tear a helpless soul from sanctuary. Instead you trip the cog-master onto the cobbles and pull the church door shut behind the boy.
+      *set empathy +4
+      *set cruelty -2
+      *gosub_scene startup recalc_stats
+      *goto docks_end
+    *else
+      You pry the boy's fingers loose from the iron ring and collect two silver pennies of crimp-money from the cog-master as the boat rows out into the [b]Thel[/b].
+      *set cruelty +5
+      *set empathy -4
+      *set coins +2
+      *set docks_fear +4
+      *gosub_scene startup recalc_stats
+      *goto docks_end
+
+*label docks_end
+As the tide turns down the [b]Thel[/b] toward the [b]Aurthel[/b] and the curfew bell rings from [b]Saint Nicholas-at-the-Tide[/b], you take your leave of [b]Merchant Row and the Docks[/b].
+*return

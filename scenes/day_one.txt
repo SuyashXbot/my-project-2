@@ -1,0 +1,240 @@
+*label opening
+The prime bell of the Cathedral Isle tolls across the fog-choked confluence of the Aur and the Thel, its bronze note heavy as wet wool. Down in the yard of the Royal Mews, fifty warhorses stamp and blow against the chill, their breath rising through the floorboards of the hayloft where you lie awake under a coarse horse-blanket.
+
+Through the shuttered pitching-door, the smell of the kingdom's capital rolls in: fifty thousand souls waking behind ring-walls and river-mud. You smell charred oat-chaff from the royal granaries, woodsmoke from ten thousand timber-framed chimneys, sour ale and fuller's urine from the ditches toward the Cut, and the damp, tarred rot of barges moored along the Aurthel. Somewhere beyond the Outer Ward, the night watch rattles its iron bills against the cobbles and cries the hour, clearing the kennels of nightsoil carts before the market gates swing wide.
+
+Your palms still bear two kinds of calluses: the high, ridged welts across the thumb-web where your father, Sir Edmund Harrowmere, taught you to turn the guard of an ash-hilted longsword, and the raw blisters from yesterday's birch-besom and dung-fork.
+
+"Up, bastard," a voice jeers from the ladder-trap below. A wooden bucket clangs against the rung. "Master Corwin wants the bay courser curried before the household knights come down from the barracks, and the pump-trough isn't going to draw itself."
+
+Before you climb down into the straw and lantern-light, you steady your breath and remember who you are.
+
+*choice
+  #My name is Alden, as my mother christened me at the country font.
+    *set name "Alden"
+    *goto name_set
+  #My name is Giles, after the patron saint of cripples and beggars—fit enough for an outcast.
+    *set name "Giles"
+    *goto name_set
+  #My name is Reynard, sharp-eared and watchful in another man's yard.
+    *set name "Reynard"
+    *goto name_set
+  #Let me speak my own given name.
+    What Christian name did your mother speak over the parish font before the bailiffs drove you from Harrowmere?
+    *input_text name
+    *goto name_set
+
+*label name_set
+*temp morning_omen 1
+*rand morning_omen 1 3
+You pull on your unbleached linen shirt and lace your woolen hose to your doublet with leather points.
+*if morning_omen = 1
+  Outside the shutter, a pair of river-herons rises from the confluence of the Aur and the Thel toward Cathedral Isle.
+*elseif morning_omen = 2
+  A light mist off the Cut beads like silver dew upon the iron hinge of the hayloft door.
+*else
+  Down in the court, the smith's hammer rings three clear strokes against the anvil before prime.
+
+Before you touch the ladder-rungs, you pause to steady your hands with a brief habit from home:
+*fake_choice
+  #I trace my thumb across the calloused sword-welt on my palm, remembering my father's drill in the orchard.
+    *set duty +1
+    The memory of Sir Edmund's calm voice steadies your breathing.
+  #I whisper a quick petition to the Lightbearer that my mother Maren's back may not ache at the bakehouse ovens today.
+    *set empathy +1
+    Warmth returns to your stiff fingers at the thought of her face.
+  #I count the silver pennies knotted in my belt-rag and swear to multiply them tenfold before winter.
+    *set ambition +1
+    The cool bite of coined silver sharpens your eyes.
+*gosub_scene startup recalc_stats
+
+Seventeen months ago, you slept in a stone solar above the hall of Harrowmere Manor, watching your father oil his mail-shirt by tallow light. Sir Edmund Harrowmere was a belted knight who had fought in the border chevauchées, yet he defied his house by marrying your mother, Maren—a bailiff's daughter of common blood—despite an old betrothal contract drawn up in youth with the highborn Lady Bellisant de Varenne.
+
+When Sir Edmund was found in a sunken lane with three crossbow quarrels in his breast—"outlaws of the greenwood," the coroner's jury called it—the clay was scarce cold over his coffin before your uncle, Lord Roderic Harrowmere, rode into the courtyard with the bishop's summoner at his stirrup. Under canon law of precontract, Lord Roderic swore that your father's prior troth to Lady Bellisant rendered his marriage to your mother null and incestuous in the eyes of Holy Church. In a single parchment sealed with red episcopal wax, your mother was named a whore, you were named [i]filius nullius[/i]—nobody's legitimate son—and the halberdiers cast you both out onto the mire of the king's highway.
+
+Your mother's brother, Tobin Hale, a prosperous chandler and baker of the capital, took you in beneath his jettied roof in the Craftsmen's Ward. Yet Uncle Tobin's charity is weighed on brass scales: your mother Maren now sweats from matins till compline before the brick ovens that Tobin's sharp-tongued wife Agnes rules, while cousin Wenna tallies the loaves. And when Tobin saw you lingering in his yard with your father's blunted practice-blade, he marched you straight to the Outer Ward to earn your keep.
+
+How do you carry the name of Sir Edmund Harrowmere now that the heralds have struck your branch from the roll?
+
+*choice
+  #I claim Harrowmere openly; my father wed my mother before a priest, whatever canon lawyers lie.
+    *set surname "Harrowmere"
+    *set father_stance "proud"
+    *set duty +3
+    *set ambition +2
+    *gosub_scene startup recalc_stats
+    You keep the name Harrowmere on your tongue like a whetstone. Let the heralds and stable-boys sneer; a priest blessed your parents' bed, and you will not unname the dead.
+    *goto roderic_question
+  #I go by Hale in the streets, hiding my father's broken name until I have the strength to reclaim it.
+    *set surname "Hale"
+    *set father_stance "guarded"
+    *set ambition +3
+    *set empathy +1
+    *gosub_scene startup recalc_stats
+    A naked blade draws too many eyes in a crowded lane. In the markets and the yard you answer to ${name} Hale, keeping your father's memory folded inside your breast like a contraband charter.
+    *goto roderic_question
+  #I resent my father's reckless love; his folly left my mother baking another woman's bread in ashes.
+    *set surname "of the Mews"
+    *set father_stance "bitter"
+    *set cruelty +2
+    *set duty +2
+    *gosub_scene startup recalc_stats
+    Sir Edmund had his romance and his quick death in the brambles; your mother got the flour-burns and the shame. You answer simply as ${name} of the Mews, owing nothing to a dead man's pride.
+    *goto roderic_question
+
+*label roderic_question
+And when you think of your uncle, Lord Roderic, who sits now in your father's oak chair and drinks from his silver mazer while Lady Bellisant's kinsfolk back his claim at court, what stirs in your belly?
+
+*choice
+  #Blood for blood. Those "bandits" carried crossbow bolts forged in Roderic's own armory.
+    *set roderic_stance "vengeful"
+    *set cruelty +3
+    *set ambition +3
+    *gosub_scene startup recalc_stats
+    Outlaws do not shoot three clean quarrels through a plate-gorget and leave a knight's purse of gold nobles untouched. One day you will put a blade to Roderic's throat and make him confess before the realm.
+    *goto bastard_question
+  #Law for law. If a clerk's parchment unmade us, a true record in the Tower of the Archivians will unmake him.
+    *set roderic_stance "calculating"
+    *set duty +3
+    *set ambition +2
+    *gosub_scene startup recalc_stats
+    Your father always swore he had purchased an archidiaconal dispensation releasing him from Lady Bellisant's precontract. If a copy of that writ exists anywhere in the kingdom, it lies buried in the stone vaults of the Tower of the Archivians.
+    *goto bastard_question
+  #Fear for my mother's life. So long as I breathe, Roderic may send men to finish what the highway began.
+    *set roderic_stance "protective"
+    *set empathy +4
+    *set duty +2
+    *gosub_scene startup recalc_stats
+    You care less for dusty manors than for keeping Maren alive and whole. While you wear the royal badge of the Mews, Roderic's cutthroats dare not strike openly within the city walls.
+    *goto bastard_question
+
+*label bastard_question
+Down in the lantern-lit aisle between the oak stalls, three stable hands wait by the water-trough. The tallest is Piers, a thick-necked nineteen-year-old from the river-fens with a broken nose and a leather jerkin stained with harness-grease. Flanking him are his two shadows, Wat and bandy-legged Hodge. Until three days ago, Piers expected Master Corwin Dray to name him under-groom of the king's destriers. Then Master Corwin saw you calm a rearing Picard stallion and test a guard-stance with a pitchfork shaft, and gave the post—and the two extra silver groats a month—to you.
+
+"Look you, Wat," Piers says loudly, spitting into the straw as your boots hit the cobbles. "Here comes Sir By-Blow of Bakehouse Lane. Tell us, ${name}—when a knight gets a brat on the wrong side of the blanket, does the boy curry horses with his little finger crooked?"
+
+How do you wear the word [i]bastard[/i] when they fling it at your face?
+
+*choice
+  #With open defiance—I step close to Piers and tell him a bastard who can hold a sword outranks a ditch-born coward.
+    *set bastard_stance "defiant"
+    *set cruelty +2
+    *set ambition +3
+    *set piers_rel -5
+    *gosub_scene startup recalc_stats
+    You step straight into Piers's reach until your shoulder nearly brushes his greased jerkin. "Say it louder, Piers," you murmur, eyes fixed on his throat. "Say it when Master Corwin brings out the ash-staves, and we will see whose blood runs thinner in the mud."
+    Piers's nostrils flare, his fist bunching, while Wat takes a hasty half-step back.
+    *goto first_test
+  #With quiet shame—I keep my head down, grip the curry-comb, and let the sting drive me to outwork them all.
+    *set bastard_stance "ashamed"
+    *set empathy +3
+    *set duty +3
+    *gosub_scene startup recalc_stats
+    The word still burns like lye on raw skin, because you remember your mother weeping outside the church porch when the summoner nailed the decree to the oak door. You say nothing, taking up the iron curry-comb and dipping the brush into the cold bucket.
+    *goto first_test
+  #With a mocking laugh—I bow low like a courtier and rob their insult of its venom.
+    *set bastard_stance "pragmatic"
+    *set ambition +2
+    *set empathy +2
+    *set piers_rel +3
+    *gosub_scene startup recalc_stats
+    You sweep an imaginary plumed chaperon to the cobbles. "Mind your tongue, good yeoman Wat, or I shall have my royal cousins quarter you in a pie." Hodge snorts despite himself, and Piers scowls as his barb glances off you harmlessly.
+    *goto first_test
+
+*label first_test
+Before Piers can answer, the heavy oak door at the northern end of the Mews swings open, admitting a gust of river-wind and the tall, iron-bearded figure of Master Corwin Dray. As Master of the Stables, Corwin holds a stone townhouse among the lords in the Gilded Row, yet on working mornings he comes down from his panelled chamber above the tack-room in greased riding boots, a horn whistle at his neck and a hazel switch under his arm. Behind him strides Sir Amaury of the Outer Ward barracks, his brigandine clinking as he inspects the mounts before the morning patrol to Northgate.
+
+"Enough cackling at the trough!" Master Corwin barks. His grey eyes cut from Piers to you. "${name}, bring out Morholt—Sir Amaury rides the wall-circuit to the Cut before tierce. Piers, fetch the salted mash for the pack-mules."
+
+Piers lowers his eyes, muttering "Aye, Master," and shuffles toward the grain-bins with Wat and Hodge at his heels. Yet as you lead the great black destrier Morholt from his stall and reach beneath his barrel chest to test the leather girth-straps, your fingers catch on something wrong.
+
+The buckle-tongue of the off-side girth has been sawed three-quarters through with a farrier's rasp and smeared with black tallow to hide the bright raw leather. The moment Sir Amaury puts his armored weight into the iron stirrup, the strap will snap, pitching a household knight onto the cobbles and breaking your career—or your neck—on your very first morning.
+
+*choice
+  #Expose the sabotage aloud before Master Corwin and Sir Amaury, pointing straight at Piers's bench where the rasp lies.
+    *set duty +4
+    *set ambition +2
+    *set corwin_rel +8
+    *set piers_rel -12
+    *set piers_state "hostile"
+    *gosub_scene startup recalc_stats
+    "Hold, Sir Amaury," you call clearly, lifting the saddle-flap to show the notched leather. "Someone took a farrier's rasp to this billet-strap before prime, and smeared tallow in the cut."
+    Master Corwin strides over, takes one look at the half-severed leather, and turns his storm-grey glare toward the grain-bins where a rasp glints beside Piers's horn lantern. Corwin does not strike Piers in front of the knight, but his voice drops to an icy rasp: "Every groom on this row forfeits two pence for damaged royal tack—and Piers, you will muck the mule-pits until compline."
+    Piers's eyes lock on yours over the grain-bin, white-hot with hatred.
+    *goto first_errand
+  #Quietly swap the cut girth for a sound strap from the tack-peg now, saving the knight without making a scene—then confront Piers alone.
+    *set duty +3
+    *set empathy +2
+    *set corwin_rel +5
+    *set piers_rel +4
+    *set piers_state "wary"
+    *gosub_scene startup recalc_stats
+    Moving with brisk, practiced hands, you unbuckle the notched leather, slip a fresh double-stitched girth from the peg, and cinch Morholt tight before Sir Amaury mounts. Master Corwin nods approval at your speed.
+    Once the knight clatters out through the gate toward the Royal Granaries, you toss the severed strap onto the lid of Piers's oat-chest. "Next time you use a rasp, fen-man," you tell him softly, "cut deeper, or don't leave tallow under your fingernails." Piers goes rigid, realizing you could have had him whipped at the yard-post and chose to hold the debt over his head instead.
+    *goto first_errand
+  #Say nothing to Corwin, but slip the sabotaged girth onto Piers's own lead-hackney so it snaps when he rides out to water the beasts.
+    *set cruelty +4
+    *set ambition +3
+    *set empathy -2
+    *set piers_rel -8
+    *set piers_state "outsmarted"
+    *gosub_scene startup recalc_stats
+    You replace Sir Amaury's strap in silence, then deftly buckle the rasped leather onto the piebald gelding Piers rides to the river-ford. Half an hour later, a roar of laughter rises from the Outer Ward gate as Piers pitches sideways into a heap of wet turnip-tops and horse dung before a dozen castle laundry-maids. He limps back into the Mews dripping mire, suspecting your hand but unable to complain without confessing who rasped the strap first.
+    *goto first_errand
+
+*label first_errand
+By midday, the fog lifts off the Aurthel, revealing the jagged slate roofs and church spires of the capital. Master Corwin summons you to the tack-room door and counts four silver pennies into your palm—an earnest-penny on your first quarter's wage.
+
+"You have a clean hand with a bridle, ${name}, just as your father had at the siege-lines before you were breeched," Corwin says, lowering his voice so the other grooms cannot hear. "Keep your head down inside these walls. Lord Roderic Harrowmere has friends among the De Varenne affinity in the Gilded Row, and your uncle Tobin Hale warned me that if you lose this post, his wife Agnes won't feed a second idle mouth at her ovens."
+
+He taps a ledger bound in pigskin. "Understand the law of this yard. Each year you owe me your Mews duty shifts, and you must work the lists when the Lightbearer Festival comes round. Your uncle Tobin expects you in the Craftsmen's Ward on your rest-days to haul flour-sacks for your mother's keep. And when word comes down regarding your father's estate or the castle offices, do not shirk the summons. Between those duties, the city gates stand open to you."
+
+Outside in the Outer Ward, four people pass through the courtyard dust as the noon bells ring from Saint Jude's and the Guildhall—four lives that will soon entangle with yours:
+- A gilded horse-litter bearing the silver swan crest of House de Varenne pauses by the inner barbican, where dark-eyed [b]Lady Ysolde de Varenne[/b] parts the damask curtain to rebuke a clumsy outrider.
+- Carrying a leather satchel of sealed parchment rolls from the Tower of the Archivians, the ink-stained junior scribe [b]Clarimond of Saint Jude's[/b] hurries past the well, squinting at an old consistory docket.
+- By the hay-carts near the postern, red-haired [b]Cateline "Cat" Rook[/b] from the Docks bargains in cant with a carter over a keg of untaxed Gascon wine hidden under clover-bales.
+- And waiting by the Outer Ward wicket with a basket of willow-bark salve and freshly baked rye-manchets from your uncle's lane stands [b]Alisoun Verrier[/b], the young apothecary-healer of the Craftsmen's Ward, who smiles when she catches sight of you.
+
+Who catches your eye first on this first noon in the capital?
+
+*choice
+  #I bow toward Lady Ysolde's litter and steady her frightened palfrey as a cart-wheel cracks nearby.
+    *set ysolde_met true
+    *set ysolde_status "acquainted"
+    *set ysolde_rel +6
+    *set ambition +2
+    *set duty +1
+    *gosub_scene startup recalc_stats
+    You catch the gilded bridle before the white palfrey can rear into the mire. Lady Ysolde leans from the litter window, the scent of crushed irises and costly alum-dyed velvet drifting over the stable-reek. "A groom who knows how to hold a headstall without jerking the curb," she murmurs, studying your cheekbones with cool curiosity. "Strange how you have the look of old Harrowmere about the jaw, boy."
+    *goto enter_hub
+  #I help Clarimond gather a roll of tax-charters when a gust of river-wind tumbles her satchel into the dust.
+    *set clarimond_met true
+    *set clarimond_status "acquainted"
+    *set clarimond_rel +6
+    *set empathy +2
+    *set duty +2
+    *gosub_scene startup recalc_stats
+    You catch the sheepskin cylinder before it touches the wet cobbles. Clarimond pushes her spectacles—a rare Venetian pair lent by the High Archivian—up her nose, her fingers dark with oak-gall ink. "Saint Jude preserve you! Had that water-stain touched the thirteenth-year episcopal register, Master Anselm would have docked my tallow-ration for a month. You are the new groom—Sir Edmund's son, aren't you? I saw your mother's petition rejected at the seal-table."
+    *goto enter_hub
+  #I kick a bundle of hay over Cateline's contraband keg just as the castle bailiff glances toward the cart.
+    *set cateline_met true
+    *set cateline_status "acquainted"
+    *set cateline_rel +6
+    *set ambition +2
+    *set cruelty +1
+    *gosub_scene startup recalc_stats
+    Your boot sends a golden cascade of clover over the branded staves of the smuggled cask three heartbeats before the bailiff's halberd passes. Cateline grins beneath her hooded frieze cloak, flipping a clipped copper farthing across her knuckles. "Quick eyes and a quiet tongue, stable-lad. Come down to the Docks or Bridgefoot when the curfew bell rings, and Cat Rook will show you how real silver swims up the Cut."
+    *goto enter_hub
+  #I walk to the wicket gate to greet Alisoun Verrier and ask after my mother's hands at the bakery ovens.
+    *set alisoun_met true
+    *set alisoun_status "acquainted"
+    *set alisoun_rel +6
+    *set empathy +3
+    *set duty +1
+    *gosub_scene startup recalc_stats
+    Alisoun presses a warm rye-cake and a small clay pot of marigold comfrey into your bruised hands. "Your mother Maren sent the bread behind Aunt Agnes's back," Alisoun says softly, her hazel eyes warm under her linen wimple. "And the salve is mine, for the rope-burns I knew you would take in the Mews. Come home to the Craftsmen's Ward on Sunday, ${name}—your mother watches the lane for you every evening."
+    *goto enter_hub
+
+*label enter_hub
+The noon bells fade across the slate roofs of the walled island, and the first year of your service in the capital begins.
+*goto_scene hub

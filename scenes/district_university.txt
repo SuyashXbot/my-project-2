@@ -1,0 +1,114 @@
+*label start_university
+*set university_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (196 words, 10 named streets/buildings)
+*comment ============================================================
+Outside the western river-wall across the muddy ferry of the [b]Aur[/b] sprawls [b]The University of the Scholiasts[/b], a turbulent liberty of ink-stained gowns, Latin disputations, and flying cobblestones. Here five hundred clerks and tonsured scholars lodge four to a truckle-bed inside the timber-framed chambers of [b]Sparrow Hostel[/b] and [b]St. Clement's Hostel[/b], while wealthier fellows dine on salted ling behind the stone quadrangles of [b]King's Hall College[/b] and [b]The College of the Decretals[/b]. Along [b]Straw Street[/b]—named for the rushes strewn ankle-deep across the lecture-floors—stationers and illuminators display chained folios in the open shutters of [b]The Brazen Serpent Bookshop[/b] and [b]Vellum Lane[/b]. The air smells of wet sheepskin, cheap red wine spilled from [b]The Mitre Tavern[/b], and boiled cabbage drifting from [b]Scholars' Well[/b] toward the disputing schools of [b]Canonists' Row[/b]. When the curfew bell tolls from [b]Saint Severin-by-the-Ferry[/b], the Chancellor's bedels patrol with silver maces to stop tavern brawls between northern and southern nations, passing the carved stone cross above [b]Plague-Scholars' Close[/b], where three entire halls of masters perished in the Great Pestilence and left their glossed Latin books without heirs.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${university_prosperity} | Fear ${university_fear} | Controlled by: [i]${university_control}[/i] (Visit #${university_visits})
+------------------------------------------------------------
+
+*comment ============================================================
+*comment EVENT 1: DISPUTATION AT THE COLLEGE OF THE DECRETALS
+*comment ============================================================
+In the straw-strewn hall of [b]The College of the Decretals[/b] on [b]Canonists' Row[/b], Doctor Baldus of the Canon Law faculty is holding a public [i]quodlibet[/i] disputation on the decretals of Pope Gregory concerning marriage precontracts ([i]sponsalia de futuro[/i] versus [i]sponsalia de praesenti[/i])—the exact point of canon law your uncle [b]Lord Roderic[/b] used to declare your mother Maren's wedding void!
+
+In the front bench sits a sleek bachelor of law retained by House de Varenne, arguing that a noble betrothal can never be dissolved by a country archdeacon's composition.
+*if clarimond_met
+  At the back of the hall by the door to [b]Vellum Lane[/b], [b]Clarimond of Saint Jude's[/b] stands taking shorthand notes on wax tablets for the Archivians.
+
+*choice
+  #Stand up among the scholars in Straw Street and cite my father's written archidiaconal release—challenging the De Varenne lawyer before Doctor Baldus!
+    *set duty +4
+    *set ambition +3
+    *set plot_evidence +1
+    *set university_prosperity +3
+    *if clarimond_met
+      *set clarimond_rel +6
+    *gosub_scene startup recalc_stats
+    Though you wear a groom's doublet rather than a scholar's tabard, your clear recital of the facts silences the hall. Doctor Baldus strokes his furred hood and declares aloud: [i]"If a party to a future betrothal accepts pecuniary composition before an archdeacon's official, the subsequent marriage in facie ecclesiae stands valid and the issue legitimate!"[/i] Three poor clerks of [b]Sparrow Hostel[/b] copy down the doctor's opinion for you on a slip of parchment.
+    *goto university_event_2
+  #Pay a hungry senior bachelor at The Brazen Serpent Bookshop two silver pennies to draft a formal Latin consilium defending my mother's marriage.
+    *if coins >= 2
+      *set coins -2
+    *set duty +3
+    *set empathy +2
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    Inside [b]The Brazen Serpent Bookshop[/b], an ink-stained bachelor from [b]King's Hall College[/b] gladly takes your two pennies to buy coal and writes out a tight, seal-worthy Latin brief refuting Lord Roderic's claim.
+    *goto university_event_2
+  #Waylay the De Varenne lawyer in Vellum Lane after the lecture and relieve him of his brief-bag and silver inkhorn.
+    *set cruelty +3
+    *set ambition +4
+    *set coins +4
+    *set plot_evidence +1
+    *set university_fear +4
+    *gosub_scene startup recalc_stats
+    When the sleek bachelor steps into the narrow shadow of [b]Vellum Lane[/b], you pull his hood over his eyes, snatch his velvet brief-bag and silver inkhorn worth four pennies, and leave him sitting in the kennel mud.
+    *goto university_event_2
+
+*comment ============================================================
+*comment EVENT 2: TOWN AND GOWN BRAWL AT THE MITRE TAVERN
+*comment ============================================================
+*label university_event_2
+Outside [b]The Mitre Tavern[/b] near [b]Scholars' Well[/b], a furious "town and gown" riot breaks out between twenty drunken students from [b]St. Clement's Hostel[/b] armed with oak quarterstaves and a band of river-watermen and west-bank watchmen. Stones fly past [b]Saint Severin-by-the-Ferry[/b], and the landlord of the tavern cries out that his wine-butts will be staved in!
+
+*choice
+  #Rally the watchmen and sober scholars of King's Hall College to part the combatants before blood is spilled on the cobbles.
+    *set duty +4
+    *set empathy +3
+    *set university_fear -5
+    *set university_prosperity +3
+    *gosub_scene startup recalc_stats
+    Using a tavern bench as a buckler, you step between the quarterstaves by [b]Scholars' Well[/b] until the Chancellor's bedels arrive with their silver maces. The grateful landlord of [b]The Mitre Tavern[/b] presses three silver pennies into your hand.
+    *set coins +3
+    *goto university_event_3
+  #Wade into the melee alongside the rowdiest scholars of Sparrow Hostel and loot a spilled strongbox in the confusion.
+    *set cruelty +3
+    *set ambition +3
+    *set empathy -2
+    *set coins +5
+    *set university_fear +5
+    *gosub_scene startup recalc_stats
+    Cracking skulls with an ash-stave in the smoke of [b]Straw Street[/b], you kick open a burst money-box dropped by a fleeing Lombard proctor and pocket five silver pennies before the bedels clear the lane.
+    *goto university_event_3
+
+*comment ============================================================
+*comment EVENT 3: THE PLAGUE-SCHOLARS' CLOSE & THE FORGER'S GARRET
+*comment ============================================================
+*label university_event_3
+By the stone memorial of [b]Plague-Scholars' Close[/b], a starving young copyist from [b]Sparrow Hostel[/b] is being threatened by a bailiff of the De Varenne affinity, who demands the boy forge a backdated precontract witness-list or be cast into the river-gaol for unpaid hostel rent. The bailiff orders you to hold the boy's right hand flat on the stone slab so he can smash his quill-fingers with an iron candlestick as a warning.
+
+*choice
+  #Knock the iron candlestick from the bailiff's fist and pay the poor scholar's hostel rent myself.
+    *if coins >= 1
+      *set coins -1
+    *set empathy +5
+    *set duty +3
+    *set cruelty -2
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    You send the candlestick spinning into the grass of [b]Plague-Scholars' Close[/b] and drive the bailiff back toward the ferry. Weeping with gratitude, the young copyist gives you the exemplar sheet the bailiff brought him to copy—proving that Roderic's side is manufacturing false witnesses!
+    *goto university_end
+  #Step forward to pin the scholar's hand to the stone—until my own nature decides whether the blow falls.
+    *if (empathy >= 52) or (cruelty <= 48)
+      *comment Hidden stats drive hesitation or refusal when ordered to harm innocents
+      You look down at the boy's thin, ink-stained fingers trembling against the cold stone of [b]Plague-Scholars' Close[/b]—the only livelihood standing between him and starvation. Your gorge rises; you cannot maim an innocent clerk. Instead, you shove the bailiff sideways into the nettles and shout for the bedels of [b]Saint Severin-by-the-Ferry[/b], letting the boy escape with his hands whole.
+      *set empathy +4
+      *set cruelty -2
+      *gosub_scene startup recalc_stats
+      *goto university_end
+    *else
+      You hold the clerk's wrist against the slab until he swears to write whatever the bailiff commands, taking three silver pennies as your share of the dark work.
+      *set cruelty +5
+      *set empathy -4
+      *set coins +3
+      *set university_fear +4
+      *gosub_scene startup recalc_stats
+      *goto university_end
+
+*label university_end
+As the ferryman poles his flat-bottomed wherry back across the dark waters of the [b]Aur[/b] under the curfew bell of [b]Saint Severin-by-the-Ferry[/b], you leave [b]The University of the Scholiasts[/b].
+*return

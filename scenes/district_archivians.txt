@@ -1,0 +1,117 @@
+*label start_archivians
+*set archivians_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (192 words, 10 named streets/buildings)
+*comment ============================================================
+Rising stark and windowless in its lower courses above [b]Charter Close[/b], the [b]Tower of the Archivians[/b] is built of fireproof grey ragstone and vaulted brick, where not a single timber beam or open hearth is permitted lest a spark devour the memory of the realm. Around its buttressed foot twist the narrow, ink-smelling lanes of [b]Parchmenter's Row[/b] and [b]Scriveners' Alley[/b], where lime-washed hides stretch on wooden frames and apprentices boil oak-galls and copperas outside [b]The Sign of the Red Seal[/b]. Within the iron-barred gatehouse of [b]Seals Court[/b], [b]High Archivian Anselm[/b] keeps his chilly winter apartments—though on feast nights he withdraws to his cushioned townhouse in the Gilded Row—while thirty tonsured clerks and lay copyists shiver in fleece-lined gowns inside the [b]Scriptorium Arcade[/b]. Across from the parish church of [b]Saint Jude-in-the-Rolls[/b] and the deep stone bucket-chain of [b]Clerks' Well[/b], plaintiffs crowd the porch of the [b]Consistory Registry[/b] and the [b]Exchequer Tally-Vault[/b]. Faded black tar-marks on the shutters of [b]Wax-Chandlers' Passage[/b] still recall the Great Pestilence, when half the royal notaries died with their quills in hand and the rolls went unsealed for a year.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${archivians_prosperity} | Fear ${archivians_fear} | Controlled by: [i]${archivians_control}[/i] (Visit #${archivians_visits})
+------------------------------------------------------------
+
+*comment ============================================================
+*comment EVENT 1: CLARIMOND OF SAINT JUDE'S & THE PRECONTRACT ROLLS
+*comment ============================================================
+Inside the stone-vaulted [b]Scriptorium Arcade[/b] beside [b]Seals Court[/b], the junior scribe [b]Clarimond of Saint Jude's[/b] sits at a sloped oak desk scraping a sheepskin membrane with a crescent-bladed [i]lunellum[/i]. Her fingers are blue with cold—since braziers are forbidden inside the fireproof [b]Tower of the Archivians[/b]—and a stack of dusty archidiaconal marriage rolls lies chained to the iron lectern beside her.
+*set clarimond_met true
+*if clarimond_status = "unmet"
+  *set clarimond_status "acquainted"
+
+*if clarimond_status = "rival"
+  Clarimond pulls the sheepskin cover over the marriage register the instant your shadow falls across her desk. "The vaults are closed to castle grooms without a chancellor's warrant, ${name}," she says stiffly.
+*else
+  Clarimond glances up through her round spectacles, her breath clouding in the chill stone air as she recognizes you. "Quietly, ${name}," she whispers, motioning you behind a pillar near the [b]Exchequer Tally-Vault[/b]. "Lord Roderic's proctor was in [b]Charter Close[/b] an hour ago asking High Archivian Anselm for the key to the nineteenth-year precontract chest."
+
+*choice
+  *selectable_if (((duty >= 48) or (empathy >= 48)) or (honor >= 50)) #Bring Clarimond a hot clay hand-warmer of baked brick wrapped in wool from the Mews, and search the marriage register together.
+    *set clarimond_rel +10
+    *if clarimond_status = "acquainted"
+      *set clarimond_status "courting"
+    *set empathy +3
+    *set duty +3
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    When you place the wool-wrapped warm brick into her chilled hands, Clarimond's cheeks color like rose-madder. "No one in [b]Seals Court[/b] has thought of my hands since my father died in the pestilence," she murmurs softly. Unlocking the iron chain on the register of [b]Saint Jude-in-the-Rolls[/b], she traces her finger down a Latin entry: [i]"Here it is—Sir Edmund Harrowmere paid forty shillings composition to annul the precontract with Lady Bellisant de Varenne before three witnesses! The leaf itself was cut out of the bishop's book, ${name}, but the fee entry in this Pipe Roll proves the dispensation existed!"[/i]
+    *goto archivians_event_2
+  #Offer Clarimond two silver pennies to transcribe the index entry for my father's marriage on strict business terms.
+    *if coins >= 2
+      *set coins -2
+    *set duty +2
+    *set ambition +2
+    *set clarimond_rel +4
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    Clarimond refuses your silver pennies with quiet pride, but out of respect for a lawful petitioner she copies the exact shelf-mark of the Harrowmere receipt onto a scrap of vellum and slips it into your glove.
+    *goto archivians_event_2
+  #Wait until Clarimond steps out to Clerks' Well, then pry the iron lock of the Consistory Registry chest with my dagger.
+    *set cruelty +2
+    *set ambition +4
+    *set duty -4
+    *set clarimond_rel -14
+    *set archivians_fear +5
+    *set plot_evidence +1
+    *gosub_scene startup recalc_stats
+    You snap the brass hasp of the document chest while Clarimond draws water at [b]Clerks' Well[/b] and tear out a parchment schedule bearing your father's seal. When Clarimond returns and sees the broken lock, her eyes fill with horror and betrayal, knowing High Archivian Anselm will blame her watch.
+    *goto archivians_event_2
+
+*comment ============================================================
+*comment EVENT 2: TAX ROLLS AT SCRIVENERS' ALLEY & WAX-CHANDLERS' PASSAGE
+*comment ============================================================
+*label archivians_event_2
+Out in [b]Scriveners' Alley[/b], between [b]The Sign of the Red Seal[/b] and [b]Wax-Chandlers' Passage[/b], a crowd of freemen from the Craftsmen's Ward is arguing with the under-collectors of the [b]Exchequer Tally-Vault[/b]. The collectors claim that a tenth-and-fifteenth war subsidy roll was lost during the plague years, and demand that the bakers—including your uncle Tobin Hale—pay their hearth-tax a second time or have their ovens sealed with royal lead.
+
+*choice
+  #Use my familiarity with the tally-chests to find the wooden counter-foil proving the bakers already paid their tax.
+    *set duty +4
+    *set empathy +3
+    *set tobin_rel +6
+    *set archivians_prosperity +4
+    *gosub_scene startup recalc_stats
+    With a nod from the clerks of [b]Saint Jude-in-the-Rolls[/b], you haul out the dust-covered willow basket of hazelwood tally-sticks from the vault porch and match the split notches against the collectors' stock. The crowd along [b]Parchmenter's Row[/b] cheers as the double-tax is struck down!
+    *goto archivians_event_3
+  #Help the under-collectors intimidate a stubborn parchment-maker in Parchmenter's Row for a share of the fine.
+    *set cruelty +3
+    *set ambition +3
+    *set empathy -3
+    *set coins +3
+    *set archivians_fear +4
+    *gosub_scene startup recalc_stats
+    You stand behind the collector's table with your hand on your hilt while the frightened parchment-maker counts out extra silver groats, earning yourself three silver pennies as bailiff's fee.
+    *goto archivians_event_3
+  #Whisper to the crowd that Lord Roderic Harrowmere's country estates have evaded the knight's-fee assessment for two years.
+    *set ambition +4
+    *set roderic_power -5
+    *gosub_scene startup recalc_stats
+    The Exchequer clerks prick up their ears at the mention of uncollected scutage on the manor of Harrowmere, entering a writ of inquiry that will cost your uncle Roderic dear at the next audit.
+    *goto archivians_event_3
+
+*comment ============================================================
+*comment EVENT 3: NIGHT WATCH AT CHARTER CLOSE
+*comment ============================================================
+*label archivians_event_3
+As dusk shadows lengthen across [b]Charter Close[/b], two hired cutthroats in dark frieze cloaks loiter beside [b]Clerks' Well[/b], carrying a horn lantern and a pot of Greek pitch—hired by someone at court to fling fire through the grating of the lower [b]Consistory Registry[/b] where the old marriage appeals are stored!
+
+*choice
+  #Drive the arsonists into Scriveners' Alley with my blade and ring the alarm-bell of Saint Jude-in-the-Rolls.
+    *set duty +4
+    *set empathy +2
+    *set clarimond_rel +6
+    *set archivians_prosperity +3
+    *set archivians_fear -4
+    *gosub_scene startup recalc_stats
+    You dash the pitch-pot from the lead cutthroat's hand onto the wet stones of [b]Clerks' Well[/b] and beat him back down [b]Scriveners' Alley[/b] until the watchmen of [b]Seals Court[/b] come running with bills and lanterns. High Archivian Anselm himself leans from the gatehouse to praise your valor.
+    *goto archivians_end
+  #Capture one of the arsonists in Wax-Chandlers' Passage and force him at knife-point to name his employer—and empty his purse.
+    *set cruelty +3
+    *set ambition +4
+    *set coins +4
+    *set plot_evidence +1
+    *set roderic_power -5
+    *gosub_scene startup recalc_stats
+    Pinning the rogue against the tar-marked plague shutters of [b]Wax-Chandlers' Passage[/b], you twist his arm until he confesses that Lord Roderic's steward paid him five groats to burn the Consistory appeal bundles. You take his four remaining silver pennies and leave him tied to the well-chain for the watch.
+    *goto archivians_end
+
+*label archivians_end
+As the iron shutters of the [b]Tower of the Archivians[/b] clang shut for the night and the curfew bell tolls over [b]Charter Close[/b], you return through the darkening lanes.
+*return

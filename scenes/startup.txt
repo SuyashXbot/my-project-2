@@ -1,0 +1,241 @@
+*title Crowns of Mud and Tallow
+*author Antigravity
+
+*scene_list
+  startup
+  day_one
+  hub
+  festival
+  district_castle
+  district_gilded_row
+  district_archivians
+  district_market
+  district_craftsmens_ward
+  district_keep_cathedral
+  district_university
+  district_bridgefoot
+  district_docks
+  district_northgate_abbey
+
+*comment ============================================================
+*comment PROTAGONIST IDENTITY AND BACKSTORY STANCES
+*comment ============================================================
+*create name "Alden"
+*create surname "Harrowmere"
+*create age 18
+*create year 1
+*create coins 12
+*create wages 10
+*create father_stance "proud"
+*create roderic_stance "vengeful"
+*create bastard_stance "defiant"
+*create title "Groom of the Royal Mews"
+
+*comment ============================================================
+*comment HIDDEN PERSONALITY STATS (Start at 50, move 1-5 per choice)
+*comment ============================================================
+*create empathy 50
+*create duty 50
+*create cruelty 50
+*create ambition 50
+
+*comment ============================================================
+*comment VISIBLE DERIVED STATS:
+*comment Honor = (D + E) - C, clamped 0..100
+*comment Infamy = (C + A) - E, clamped 0..100
+*comment ============================================================
+*create honor 50
+*create infamy 50
+
+*comment ============================================================
+*comment LOVE INTERESTS (4 Women, non-exclusive until commitment)
+*comment ============================================================
+*create ysolde_rel 50
+*create ysolde_met false
+*create ysolde_status "unmet"
+
+*create clarimond_rel 50
+*create clarimond_met false
+*create clarimond_status "unmet"
+
+*create cateline_rel 50
+*create cateline_met false
+*create cateline_status "unmet"
+
+*create alisoun_rel 50
+*create alisoun_met false
+*create alisoun_status "unmet"
+
+*create committed_li "none"
+
+*comment ============================================================
+*comment FAMILY, MEWS, AND RIVALRY VARIABLES
+*comment ============================================================
+*create maren_rel 75
+*create maren_age 40
+*create maren_job_lost false
+
+*create tobin_rel 60
+*create tobin_age 45
+*create tobin_patience 3
+
+*create agnes_rel 55
+*create wenna_rel 65
+*create wenna_age 16
+
+*create corwin_rel 60
+*create corwin_age 48
+
+*create piers_rel 30
+*create piers_state "hostile"
+*create framed_by_piers false
+*create girth_sabotaged false
+*create feed_tainted false
+
+*comment ============================================================
+*comment MANDATORY DUTIES, LAPSES, AND MAIN PLOT TRACKING
+*comment ============================================================
+*create lapses 0
+*create mews_lapses 0
+*create family_lapses 0
+*create fallen_branch false
+
+*create did_mews_duty false
+*create did_family_duty false
+*create did_festival false
+*create did_main_plot false
+*create visited_district_this_year "none"
+
+*create plot_evidence 0
+*create roderic_power 65
+*create bellisant_letter_seen false
+*create prince_horse_fate "untouched"
+*create festival_count 0
+*create tournament_winner "none"
+
+*create statues_prayed 0
+*create statues_offered 0
+*create statues_defaced 0
+*create king_vortimer_defaced true
+
+*create city_reputation "Newcomer to the Mews"
+*create bastard_rumor_level 20
+
+*comment ============================================================
+*comment DISTRICT STATE VARIABLES (Prosperity, Fear, Control, Visits)
+*comment ============================================================
+*create castle_prosperity 75
+*create castle_fear 35
+*create castle_control "Lord Steward Symon Vane"
+*create castle_visits 0
+
+*create gilded_prosperity 85
+*create gilded_fear 25
+*create gilded_control "House de Varenne"
+*create gilded_visits 0
+
+*create archivians_prosperity 70
+*create archivians_fear 30
+*create archivians_control "High Archivian Anselm"
+*create archivians_visits 0
+
+*create market_prosperity 65
+*create market_fear 35
+*create market_control "The Guild of Mercers"
+*create market_visits 0
+
+*create craftsmens_prosperity 60
+*create craftsmens_fear 30
+*create craftsmens_control "The Bakers and Cordwainers"
+*create craftsmens_visits 0
+
+*create keep_prosperity 70
+*create keep_fear 45
+*create keep_control "Bishop Odo and the Constable"
+*create keep_visits 0
+
+*create university_prosperity 55
+*create university_fear 35
+*create university_control "The Masters of Canon Law"
+*create university_visits 0
+
+*create bridgefoot_prosperity 25
+*create bridgefoot_fear 70
+*create bridgefoot_control "The Cutthroat Bailiffs"
+*create bridgefoot_visits 0
+
+*create docks_prosperity 60
+*create docks_fear 50
+*create docks_control "The Wharfinger Syndicate"
+*create docks_visits 0
+
+*create northgate_prosperity 65
+*create northgate_fear 30
+*create northgate_control "Abbot Gervase and the Wardens"
+*create northgate_visits 0
+
+*gosub recalc_stats
+*goto_scene day_one
+
+*label recalc_stats
+*if empathy < 0
+  *set empathy 0
+*if empathy > 100
+  *set empathy 100
+*if duty < 0
+  *set duty 0
+*if duty > 100
+  *set duty 100
+*if cruelty < 0
+  *set cruelty 0
+*if cruelty > 100
+  *set cruelty 100
+*if ambition < 0
+  *set ambition 0
+*if ambition > 100
+  *set ambition 100
+
+*set honor (duty + empathy)
+*set honor -cruelty
+*if honor < 0
+  *set honor 0
+*if honor > 100
+  *set honor 100
+
+*set infamy (cruelty + ambition)
+*set infamy -empathy
+*if infamy < 0
+  *set infamy 0
+*if infamy > 100
+  *set infamy 100
+
+*if ysolde_rel < 0
+  *set ysolde_rel 0
+*if ysolde_rel > 100
+  *set ysolde_rel 100
+*if clarimond_rel < 0
+  *set clarimond_rel 0
+*if clarimond_rel > 100
+  *set clarimond_rel 100
+*if cateline_rel < 0
+  *set cateline_rel 0
+*if cateline_rel > 100
+  *set cateline_rel 100
+*if alisoun_rel < 0
+  *set alisoun_rel 0
+*if alisoun_rel > 100
+  *set alisoun_rel 100
+
+*if (honor >= 75) and (empathy >= 60)
+  *set title "Knight Errant of the Mud"
+*elseif (infamy >= 75) and (cruelty >= 60)
+  *set title "The Butcher"
+*elseif (honor >= 65) and (duty >= 60)
+  *set title "Sworn Hand of the Mews"
+*elseif (infamy >= 65) and (ambition >= 60)
+  *set title "Wolf of the Cut"
+*elseif fallen_branch
+  *set title "Branded Drover of Bridgefoot"
+*else
+  *set title "Groom of the Royal Mews"
+*return

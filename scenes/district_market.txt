@@ -1,0 +1,119 @@
+*label start_market
+*set market_visits +1
+
+*comment ============================================================
+*comment SENSORY DESCRIPTION (198 words, 10 named streets/buildings)
+*comment ============================================================
+At the loud, reeking navel of the walled island spreads [b]The Great Market Square[/b], where three days a week five thousand buyers and country hucksters jostle axle-to-axle between the timber-framed jettied tenements of [b]Poultry Row[/b] and [b]Shambles Lane[/b]. Blood and offal from the butchers' blocks run down the central stone gutter into [b]Great Conduit[/b], mingling with the fragrance of bruised cloves from [b]Spicers' Arcade[/b], boiling lard from [b]Pie-Corner[/b], and wet wool piled before the [b]Mercers' Hall[/b]. Above the trestle stalls towers the freestone porch of the [b]City Guildhall[/b], where aldermen in furred scarlet gowns hold the Court of Piepowder beside the pillory and the iron chains of [b]The Tun Prison[/b]. In the center of the cobbles rises the octagonal steps of [b]The Market Cross[/b], crowned by the ancient bronze-and-limestone statue of [b]King Aurelian I the Founder[/b], while across the square the bells of [b]Saint Bartholomew-at-the-Stocks[/b] ring the market hours when forestallers may not buy before common citizens. Behind [b]Butter-Cross Well[/b], two boarded-up tenements still bear the carved date of the Great Pestilence, when cattle wandered untended among the spilled bolts of Flanders cloth.
+
+------------------------------------------------------------
+[b]District State:[/b] Prosperity ${market_prosperity} | Fear ${market_fear} | Controlled by: [i]${market_control}[/i] (Visit #${market_visits})
+------------------------------------------------------------
+
+*comment ============================================================
+*comment EVENT 1: STATUE OF KING AURELIAN I THE FOUNDER (STATUE #2)
+*comment ============================================================
+At the center of the square, you climb the worn stone steps of [b]The Market Cross[/b], where the weathered statue of [b]King Aurelian I the Founder[/b] holds a stone charter-scroll and looks out over [b]Poultry Row[/b] and the [b]City Guildhall[/b]. Country wives touch the hem of his carved mantle before striking a bargain so their weights will hold true.
+
+How do you act before the statue of the Founder-King?
+
+*choice
+  #Bow my head at the Market Cross and pray to King Aurelian that the city's laws protect the landless and the disinherited.
+    *set statues_prayed +1
+    *set duty +3
+    *set empathy +2
+    *gosub_scene startup recalc_stats
+    You kneel on the steps above the roar of [b]Shambles Lane[/b], asking the Founder-King for a fair hearing in the city his hands raised. Several aldermen descending from the [b]City Guildhall[/b] note your piety with approval.
+    *goto market_event_2
+  *selectable_if (coins >= 1) #Leave a silver penny and a wheaten cake at King Aurelian's feet for the poor widows who sweep the square.
+    *set coins -1
+    *set statues_offered +1
+    *set empathy +4
+    *set duty +2
+    *set market_prosperity +2
+    *gosub_scene startup recalc_stats
+    You place a silver penny in the hollow of the Founder's stone charter-scroll, where the parish bedesmen of [b]Saint Bartholomew-at-the-Stocks[/b] gather alms for the lame.
+    *goto market_event_2
+  #Chalk a bawdy rhyme about corrupt aldermen across King Aurelian's pedestal and chip a flake from his stone sceptre.
+    *set statues_defaced +1
+    *set cruelty +3
+    *set ambition +3
+    *set duty -3
+    *set market_fear +4
+    *gosub_scene startup recalc_stats
+    With a piece of tallow-chalk and your dagger-pommel, you scar the Founder-King's plinth before a laughing knot of prentices from [b]Pie-Corner[/b], mocking the fat burgesses of the [b]Mercers' Hall[/b].
+    *goto market_event_2
+
+*comment ============================================================
+*comment EVENT 2: THE COURT OF PIEPOWDER & UNCLE TOBIN'S WEIGHTS
+*comment ============================================================
+*label market_event_2
+Before the pillory outside the [b]City Guildhall[/b], the market clerk of the Court of Piepowder—bribed by a rival master of the [b]Mercers' Hall[/b]—has seized a flour-cart belonging to your uncle [b]Tobin Hale[/b], claiming his half-bushel measure is short by two ounces! If the charge stands before the bell of [b]Saint Bartholomew-at-the-Stocks[/b] ceases ringing, Tobin will be fined ten shillings and your cousin Wenna, who was minding the cart by [b]Butter-Cross Well[/b], will be shamed before the whole ward.
+
+*choice
+  #Step before the aldermen and demand the standard brass bushel be brought out from the Guildhall chest—proving the clerk tampered with the scale!
+    *set duty +4
+    *set empathy +3
+    *set tobin_rel +10
+    *set wenna_rel +8
+    *set market_prosperity +3
+    *set market_fear -3
+    *gosub_scene startup recalc_stats
+    Pointing to the lump of lead-tallow stuck secretly beneath the clerk's balance-pan, you call upon the sworn weigher of [b]Great Conduit[/b] to test Uncle Tobin's measure against the king's brass standard. The lead falls away before a hundred witnesses, clearing Tobin's name and sending the corrupt clerk to the pillory instead! Cousin Wenna throws her arms around your neck in relief.
+    *goto market_event_3
+  #Corner the rival mercer's factor behind Shambles Lane and intimidate him into withdrawing the complaint—plus paying four silver pennies for your trouble.
+    *set cruelty +3
+    *set ambition +4
+    *set coins +4
+    *set tobin_rel +5
+    *set market_fear +4
+    *gosub_scene startup recalc_stats
+    You drag the factor behind a hanging row of beef carcasses in [b]Shambles Lane[/b] and show him six inches of bright steel until he hurries back to the [b]City Guildhall[/b] to withdraw his accusation and slips four pennies into your fist.
+    *goto market_event_3
+  #Let Uncle Tobin pay his own fine while I bargain with a country horse-dealer at Poultry Row for a two-penny brokerage fee.
+    *set ambition +3
+    *set empathy -3
+    *set duty -2
+    *set tobin_rel -6
+    *set coins +2
+    *gosub_scene startup recalc_stats
+    Remembering how coldly Uncle Tobin weighed your keep on your first day, you turn your back on his cart and earn two silver pennies judging the teeth of a pack-mare by [b]Poultry Row[/b].
+    *goto market_event_3
+
+*comment ============================================================
+*comment EVENT 3: THE TUN PRISON & THE CUTPURSE IN SPICERS' ARCADE
+*comment ============================================================
+*label market_event_3
+As the market bell rings for the afternoon clearing of the stalls, a cry of [i]"Stop thief!"[/i] echoes down [b]Spicers' Arcade[/b]. A barefoot girl no older than twelve, her kirtle ragged from the tenements near the plague-boarded houses, darts past [b]Pie-Corner[/b] clutching a loaf of horse-bread and a nutmeg-pouch, pursued by two beefy sergeants of [b]The Tun Prison[/b] waving iron-shod staves.
+
+*choice
+  #Pay the spice-merchant a silver penny for the spilled nutmeg and shield the starving girl from The Tun Prison's staves.
+    *if coins >= 1
+      *set coins -1
+    *set empathy +5
+    *set duty +2
+    *set cruelty -2
+    *gosub_scene startup recalc_stats
+    You step between the iron-shod staves and the girl, tossing a penny onto the spice-board to satisfy the merchant. Grateful, the rag-girl whispers a secret she overheard beneath the Guildhall steps: Lord Roderic's proctor has been buying up old debts owed by the consistory summoners!
+    *set plot_evidence +1
+    *goto market_end
+  #Trip the thief as the sergeants order—or let my conscience stay my foot at the last instant.
+    *if (empathy >= 52) or (cruelty <= 48)
+      *comment Hidden stats drive hesitation or refusal when ordered to harm innocents
+      "Trip her, groom! Break her shins!" the sergeant of [b]The Tun Prison[/b] bellows. You start to thrust your boot into the cobbles—and then you see her hollow cheeks and the horse-bread clutched for a sick brother. Your foot pulls back of its own accord; instead you stumble purposefully into the sergeant's path, letting the child vanish down the alley behind [b]Butter-Cross Well[/b].
+      *set empathy +3
+      *set cruelty -2
+      *gosub_scene startup recalc_stats
+      *goto market_end
+    *else
+      You hook your boot behind the girl's ankle, sending her sprawling across the kennel stones of [b]Spicers' Arcade[/b], and collect a two-penny reward from the merchant while the sergeants haul her into [b]The Tun Prison[/b].
+      *set cruelty +4
+      *set empathy -4
+      *set coins +2
+      *set market_fear +3
+      *gosub_scene startup recalc_stats
+      *goto market_end
+
+*label market_end
+As the scavengers sweep the cabbage-stalks into the gutters and the curfew bell tolls from [b]Saint Bartholomew-at-the-Stocks[/b], you leave [b]The Great Market Square[/b].
+*return
